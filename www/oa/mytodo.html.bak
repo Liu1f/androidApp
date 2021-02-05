@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>待办</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    
+    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/rem.js"></script>
+    
+    <script src="../js/flylistpageapp.js"></script>    
+    <script src="../js/flyapp.js"></script>
+    <script src="../js/flynav.js"></script>
+    <script src="../js/pubUtilapp.js"></script>
+    <script type="text/javascript" src="../js/ajaxPubapp.js"></script>    
+    
+<script type="text/javascript"> 
+
+/**
+   * 后台服务器操作接口。
+   * 1、确定servlet地址即可   
+   * 2、后台取值两个，flag、opValue。
+   * 3、根据flag判断，拆串opValue，进行处理
+   * @param flag     操作标识
+   * @param opValue  处理的值，一般为拼串。到后台要拆串
+   * @return 处理结果值。正确返回相应值或标识，错误返回错误标识，由前台提示   
+   */
+   
+function toServerOp(flag,opValue){
+	
+	if(flag=="ListQuery")
+	    flag = "MyListQueryApp";
+	 else if(flag=="TurnPage")
+	    flag = "MyTurnPageApp";
+	
+   var info = "opValue="+opValue;
+	 var result = getHttpResponse("/fwis/mssl/workflowExcSrv",flag,info);	
+	
+	 return result;	    
+}
+/*
+ //周报主界面
+function toXsrz(){
+	 window.location.href="xsrz.html";
+}
+function toFun(){
+	 window.location.href="fun.html";
+}
+function toSet(){
+	 window.location.href="set.html";
+}
+ //模板列表
+function toDataSl(){
+	 window.location.href="data_sl.html";
+}
+ //模板设置
+function toDataItem(){
+	 window.location.href="data_item.html";
+}
+ //取得选择项列表
+function getList(){	 
+	
+	getServerUrl();
+	
+	var serverUrl_a = "http://localhost:8081/fwis/mssl/workflowExcSrv";
+	
+	var info = "opInfo="+params_a.itemCode;
+		
+	send_request("oneitemlist",serverUrl_a,info);  
+	
+	return;
+} //显示选择项列表 
+function showOneItemList(str){	 
+	
+	 if(str==null || str.trim().length<2)
+	    return;
+	 else if(str=="NO") {
+	 	
+	 	  alert("登录用户不具备权限");
+	 	  return;
+	 }
+	 
+	 //生成项目列表 
+	 var tpList = str.split("|");	
+	 var tpl = "<li id='"+tpList[0]+"' style='margin-top:15px;' onclick=\"toItemDesc('"+tpList[0]+"','"+tpList[1]+"')\"><span class='span-title'>"+tpList[1]+"</span><span class='span-bar'>></span> </li>";
+	
+	 for(var i=2; i<tpList.length; i=i+2)	 	
+	 	   tpl+= "<li id='"+tpList[i]+"'onclick=\"toItemDesc('"+tpList[i]+"','"+tpList[i+1]+"')\"><span class='span-title'>"+tpList[i+1]+"</span><span class='span-bar'>></span> </li>";
+  
+   var tpUl = document.getElementById("tpUl");
+	 tpUl.innerHTML = tpl;
+	 
+	 return;
+}
+*/
+
+function init(){
+	
+	getRealPath();
+	
+	flyListPageSetAuth();
+	
+	progId_a = flyListPageGetProgId();
+	
+	flyListPageQuery();
+	
+	pubUtilInputEnterQuery("flylistpageappQueryId","flyListPageQuery");	
+
+}
+</script>
+</head>
+
+<body  onLoad='init()'>
+    <div class="main navpage">
+    	
+    	  <div class="page-title">
+            <a href="../mainpage.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+            <span class="ft-35">待办</span>
+            <span></span>
+        </div>
+        <div class="h-110 nav-input">
+            <input id="flylistpageappQueryId" type="text" placeholder="输入姓名、单号、单名、部门">
+        </div>
+
+        <div class="container" id="flyListPageTableList">
+            <!-- 0 默认状态, 1 左滑状态 -->
+            <div class="item list" data-status='0'>
+                <div class="content list"  flyflag="9"   onClick="flynavToApproveShow(this,'E');">
+                    <div class="nav-hang">
+                        <span flyflag="0">购买用品购买用品购买用品购买用品购买用品购买用品购买用品购买用品</span>
+                        <div class="cl-a9b">
+                            <span flyflag="0">曹雨虹</span>
+                            <span flyflag="0">警保处警保处警保处警保处警保处</span>
+                        </div>
+                        <div class="cl-a9b">
+                            <span flyflag="0">2020-06-16</span>
+                            <span flyflag="0">17:16:31</span>
+                        </div>
+                        <span class="iconfont icon-z043"></span>
+                        <!--<a href="../payExpense/travelexpenseshow.html"><span class="iconfont icon-z043"></span></a>-->
+                    </div>
+                </div>
+                <div class="button-group list">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item list" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content list">
+                    <div class="nav-hang">
+                        <span>购买用品</span>
+                        <div class="cl-a9b">
+                            <span>曹雨虹</span>
+                            <span>警保处</span>
+                        </div>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="../payExpense/directlyexpenseshow.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group list">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+
+</html>
+
+<script type="text/javascript" src="../js/common.js"></script>

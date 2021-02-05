@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="wulan-sdk-v1.0.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/platforms/android/app/src/main/libs/wulan-sdk-v1.0.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>差旅费报销</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/data.css">
+    <link rel="stylesheet" href="../css/zui.css">
+    <link href="../css/common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+<!--    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="../js/rem.js"></script>
+<!--    <script src="../js/jquery.rotate.min.js"></script>-->
+    <style>
+        .container {
+            width: 100%;
+            background: #efefef;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .item {
+            position: relative;
+            width: 100%;
+            height: 1.2rem;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .item .content {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1.2rem;
+            padding-left: 20px;
+            line-height: 50px;
+            z-index: 1;
+            box-sizing: border-box;
+            background: #fff;
+            border-bottom: 1px solid rgba(153, 153, 153, 0.192);
+            transition: all .5s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .item .button-group {
+            position: absolute;
+            right: 0;
+            z-index: 0;
+        }
+
+        .item .button-group .del-btn {
+            height: 1.2rem;
+            width: 60px;
+            border: 0;
+            color: #fff;
+            background: #da3d3d;
+            border: 1px solid #fff;
+
+        }
+
+        .item.active .content {
+            left: -60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="apply">
+            <div class="h-70">
+                <a href="./details.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+                <span class="ft-35">差旅费报销</span>
+                <span></span>
+            </div>
+            <div class="apply-first">
+                <div class="h-120">
+                    <span>报销单号</span>
+                    <input type="text" value="CLF20190514001">
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>报销名称</span>
+                    <input type="text" value="CLF20190514001">
+                    <span></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>报销部门</span>
+                    <span class="wd-30"></span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>警保处</div>
+                            <div>采购部</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>报&nbsp;销&nbsp;人</span>
+                    <span class="wd-30"></span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>曹雨虹</div>
+                            <div>张楠</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang yin">
+                    <span>申&nbsp;请&nbsp;单</span>
+                    <span class="wd-30"></span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div name="申请1">申请1(曹雨虹)20200101</div>
+                            <div name="申请2">申请2(曹雨虹)20200201</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang yin">
+                    <span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+                    <span class="wd-30"></span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div name="信息化采购项目1">信息化采购项目1(部门专项职责履行项目)</div>
+                            <div name="信息化采购项目2">信息化采购项目2(部门专项职责履行项目)</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>出差类别</span>
+                    <span class="wd-30">审计管理</span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>审计管理</div>
+                            <div>培训差旅</div>
+                            <div>一般行政差旅</div>
+                            <div>审计项目</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>出差情况</span>
+                    <span class="wd-30">正常出差</span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>正常出差</div>
+                            <div>特殊加急</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>用餐情况</span>
+                    <span class="wd-30">自行用餐</span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>自行用餐</div>
+                            <div>协助安排就餐</div>
+                            <div>按规定接待一餐</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                <div class="h-120">
+                    <span>出差人员</span>
+                    <input type="text" value="">
+                    <span></span>
+                </div>
+                <!--
+                <div class="h-120 tanchuang">
+                    <span>出差人员</span>
+                    <span class="wd-30">出差人员</span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>选择图片</div>
+                            <div>拍照</div>
+                            <div>扫码</div>
+                            <div>连续扫码</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+                -->
+                <div class="h-120">
+                    <span>出差人数</span>
+                    <input type="text" value="0">
+                    <span></span>
+                </div>
+                <div class="h-120 tanchuang">
+                    <span>差旅公司</span>
+                    <span class="wd-30"></span>
+                    <div class="ab">
+                        <div class="nav">
+                            <div>出差公司1</div>
+                            <div>出差公司2</div>
+                            <p class="quxiao">取消</p>
+                        </div>
+                    </div>
+                    <span class="iconfont icon-z043"></span>
+                </div>
+            </div>
+            <div class="wd-100 bd-ef pd-20">
+                <div class="father">
+                    <div class="add-img">
+                        <img src="../img/jiahao.png" class="cun" id="cun">
+                    </div>
+                </div>
+                <div class="ab1" id="ab1">
+                    <div class="nav1" id="nav1">
+                        <div class="tu">
+                            <span>选择图片</span>
+                            <section class="z_file fl">
+                                <input type="file" name="file" id="file" class="file" value=""
+                                       accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+                            </section>
+                        </div>
+                        <div class="pai">
+                            <span>拍照</span>
+                            <input type="file" capture="camera" accept="image/*">
+                        </div>
+                        <div class="pai">
+                            <span>扫码</span>
+                            <input type="file" capture="camera" accept="image/*">
+                        </div>
+                        <div class="pai">
+                            <span>连续扫码</span>
+                            <input type="file" capture="camera" accept="image/*">
+                        </div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-20 h-80 center mb-20">
+                <span class="mb-10 cs-pt cl-e65">添加相关附件</span>
+            </div>
+            <div class="apply-second">
+                <div class="cs-pt cl-e65 tianjia" id="tianjia">
+                    <span>添加旅程</span>
+                    <div class="none">
+                        <div class="fixed fixed2" id="fixed2">
+                            <div class="lvcheng">
+                                <div class="shijian1">
+                                    <span>出发时间</span>
+                                    <input readonly class="form-control" type="text" id="date-group1-1" placeholder="">
+                                    <span class="iconfont icon-z043 wd-10"></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>到达时间</span>
+                                    <input readonly class="form-control" type="text" id="date-group1-2" placeholder="">
+                                    <span class="iconfont icon-z043 wd-10"></span>
+                                </div>
+                                <!--
+                                <div>
+                                    <span>出发地点</span>
+                                    <input type="text" class="wd-50" placeholder="CLF20190514001" class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>到达地点</span>
+                                    <input type="text" class="wd-50" placeholder="CLF20190514001">
+                                    <span></span>
+                                </div>-->
+                                <div class="jiaotong">
+                                    <span>出发地点</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>北京</div>
+                                            <div>邯郸</div>
+                                            <div>郑州</div>
+                                            <div>南京</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>到达地点</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>南京</div>
+                                            <div>郑州</div>
+                                            <div>邯郸</div>
+                                            <div>北京</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>交通方式</span>
+                                    <span class="sp-ct">火车</span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>火车</div>
+                                            <div>地铁</div>
+                                            <div>高铁</div>
+                                            <div>大巴</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>交通费</span>
+                                    <input type="text" class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注(车牌号)</span>
+                                    <input type="text" class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 lvcheng-queren" id="lvcheng-queren">确认</span>
+                                    <span class="wd-30">确认继续</span>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apply-second">
+                <!--
+                <div class="container">
+                    <div class="item" data-status='0'>
+                        <div class="content">
+                            <div class="apply-second-hua">
+                                <span class="wd-50">曹雨虹(科级)</span>
+                                <span class="wd-15 ta-rt cl-e0d">￥23465</span>
+                            </div>
+                            <div class="apply-second-hua">
+                                <span class="cl-afa">
+                                    邯郸
+                                </span>
+                                <span class="ta-ct xuxian cl-afa xuxian-cl-afa">
+                                    火车
+                                    <i class="cl-afa"></i>
+                                </span>
+                                <span class="ta-ct cl-afa">北京</span>
+                                <span class="wd-25 cl-afa">2020-09-18</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn">删除</button>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="cl-e65 cs-pt chengjian" id="chengjian">
+                    <span>添加城间交通</span>
+                    <div class="none">
+                        <div class="fixed fixed3" id="fixed3">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>姓名</span>
+                                    <input type="text" class="wd-50" placeholder="" class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>级别</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>出发时间</span>
+                                    <input readonly class="form-control" type="text" id="date-group1-3" placeholder="">
+                                    <span class="iconfont icon-z043 wd-10"></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>到达时间</span>
+                                    <input readonly class="form-control" type="text" id="date-group1-4" placeholder="">
+                                    <span class="iconfont icon-z043 wd-10"></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>出发地点</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>北京</div>
+                                            <div>邯郸</div>
+                                            <div>郑州</div>
+                                            <div>南京</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>到达地点</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>南京</div>
+                                            <div>郑州</div>
+                                            <div>邯郸</div>
+                                            <div>北京</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>交通工具</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>高铁二等</div>
+                                            <div>高铁一等</div>
+                                            <div>飞机经济舱</div>
+                                            <div>飞机头等舱</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10 cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>交&nbsp;通&nbsp;费</span>
+                                    <input type="text" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支付类别</span>
+                                    <span class="sp-ct"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>银行卡</div>
+                                            <div>公务卡</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10 cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>备注(车牌号)</span>
+                                    <input type="text" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 chengjian-queren" id="chengjian-queren">确认</span>
+                                    <span class="wd-30">确认继续</span>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apply-second">
+                <!--
+                <div class="container">
+                    <div class="item" data-status='0'>
+                        <div class="content">
+                            <div class="apply-second-hua">
+                                <span>曹雨虹(科级)</span>
+                                <span>3</span>
+                            </div>
+                            <div class="apply-second-hua">
+                                <span class="cl-afa">200<span class="cl-afa-span">(住宿)</span></span>
+                                <span class="cl-afa">100<span class="cl-afa-span">(伙食补助)</span></span>
+                                <span class="cl-afa">30<span class="cl-afa-span">(交通补助)</span></span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn">删除</button>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="cs-pt cl-e65 zhusubuzhu" id="zhusubuzhu">
+                    <span>添加住宿和补助</span>
+                    <div class="none">
+                        <div class="fixed fixed4" id="fixed4">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>姓名</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>级别</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>地点</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>天数</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>住宿标准</span>
+                                    <input type="text" class="wd-50" value="100" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>伙食补助标准</span>
+                                    <input type="text" class="wd-50" value="50" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通补助标准</span>
+                                    <input type="text" class="wd-50" value="60"  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>电子票据</span>
+                                    <input type="text" class="wd-50" value="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 zhusubuzhu-queren" id="zhusubuzhu-queren">确认</span>
+                                    <span class="wd-30">确认继续</span>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apply-third">
+                <!--
+                <div class="container">
+                    <div class="item" data-status='0'>
+                        <div class="content">
+                            <div class="apply-third-div">
+                                <span class="wd-60">曹雨虹(科级)</span>
+                                <span class="cl-e0d">￥1000</span>
+                            </div>
+                            <div class="apply-third-div">
+                                <span class="cl-afa ta-lt">2<span class="cl-afa-span">(天)</span></span>
+                                <span class="cl-afa">400<span class="cl-afa-span">(基本费用)</span></span>
+                                <span class="cl-afa ta-rt">100<span class="cl-afa-span">(其他)</span></span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn">删除</button>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="cl-e65 cs-pt jisuan apply-third-last" id="jisuan">
+                    <span>费用计算</span>
+                    <div class="none">
+                        <div class="fixed fixed1" id="fixed1">
+                            <div class="lvcheng jiaotong">
+                                <div>
+                                    <span>指标</span>
+                                    <span class="sp-ct">火车</span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>火车</div>
+                                            <div>地铁</div>
+                                            <div>高铁</div>
+                                            <div>大巴</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10 cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>总金额&nbsp;&nbsp;</span>
+                                    <input type="text" placeholder="1900000">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>可用额度</span>
+                                    <input type="text" placeholder="900000">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>本次使用金额</span>
+                                    <input type="text" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>对应支出项</span>
+                                    <input type="text" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注</span>
+                                    <input type="text" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 lvcheng-quxiao">确认</span>
+                                    <div></div>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apply-fifth">
+                <!--
+                <div class="container">
+                    <div class="item" data-status='0'>
+                        <div class="content">
+                            <div class="apply-fifth-div">
+                                <div>
+                                    <span class="wd-50">收款人(公务卡)</span>
+                                    <span class="wd-50 cl-e0d jt-end">￥1000</span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 cl-afa">亚运村支行</span>
+                                    <span class="wd-70 cl-afa jt-end">222222222222222222222</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn">删除</button>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="cs-pt cl-e65 zhifuxinxi" id="zhifuxinxi">
+                    <span>支付信息</span>
+                    <div class="none">
+                        <div class="fixed fixed5" id="fixed5">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>收款人</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>开户行</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支付方式</span>
+                                    <span class="sp-ct">公务卡</span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div>公务卡</div>
+                                            <div>银行卡</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>账号</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>金额</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 zhifuxinxi-queren" id="zhifuxinxi-queren">确认</span>
+                                    <span class="wd-30">确认继续</span>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="apply-fourth">
+<!--                &lt;!&ndash;-->
+                <div class="container">
+                    <div class="item" data-status='0'>
+                        <div class="content">
+                            <div class="apply-fourth-div">
+                                <div>
+                                    <span class="wd-50">指挥中心(办工经费)</span>
+                                    <span class="wd-20 jt-end cl-e0d">￥1000</span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 ta-lt cl-afa">2020<span class="cl-afa-span">(年)</span></span>
+                                    <span class="wd-30 cl-afa">8000<span class="cl-afa-span">(总额)</span></span>
+                                    <span class="wd-40 cl-afa">1200<span class="cl-afa-span">(预算余额)</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn">删除</button>
+                        </div>
+                    </div>
+                </div>
+<!--                &ndash;&gt;-->
+                <div class="cs-pt cl-e65 zhibiao" id="zhibiao">
+                    <span>添加指标</span>
+                    <div class="none">
+                        <div class="fixed fixed6" id="fixed6">
+                            <div class="lvcheng">
+                                <div class="zhibiaoinfo">
+                                    <span>支出指标</span>
+                                    <span class="sp-ct" year="2020" guikou="指挥中心" xiangmu="办公经费" money="4000" yue="3000"></span>
+                                    <div class="hc">
+                                        <div class="fangshi">
+                                            <p>
+                                                <span class="fangshi-quxiao">取消</span>
+                                                <span class="cl-cf7 fangshi-queren">确定</span>
+                                            </p>
+                                            <div year="2020" guikou="指挥中心" xiangmu="办公经费" money="2000" yue="1000">2020指挥中心办公经费2000元</div>
+                                            <div  year="2020" guikou="指挥中心" xiangmu="办公经费" money="4000" yue="3000">2020指挥中心办公经费4000元</div>
+                                        </div>
+                                    </div>
+                                    <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                                </div>
+                                <div>
+                                    <span>支出金额</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支出项</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注</span>
+                                    <input type="text" class="wd-50" placeholder="">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 zhibiao-queren" id="zhibiao-queren">确认</span>
+                                    <span class="wd-30">确认继续</span>
+                                    <span class="wd-30 lvcheng-quxiao">取消</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apply-footer">
+                <div>
+                    <span class="cl-afa">合计：</span>
+                    <span class="cl-afa">0元</span>
+                </div>
+                <div>
+                    <a href="#"  onClick="toSave(this,'PV');">保存</a>
+                </div>
+                <div>
+                    <a href="#" onClick="toSave(this,'PV');">保存审批</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!--<script src="../js/zui.js"></script>-->
+<!--<script src="../js/imgUp.js"></script>-->
+<script type="text/javascript" src="../js/rolldate.min.js"></script>
+<script type="text/javascript">
+    // 时间选择器
+    window.onload = function () {
+        // 格式
+        new Rolldate({
+            el: '#date-group1-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-2',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-3',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-4',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        /* 回调函数
+         * tips:	在vue及其他mvvm框架中使用时，在confirm中修改v-model绑定的数据即可
+         */
+        new Rolldate({
+            el: '#date-group2-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                console.log('插件开始触发');
+            },
+            moveEnd: function (scroll) {
+                console.log(scroll)
+                console.log('滚动结束');
+            },
+            confirm: function (date) {
+                console.log(date)
+                console.log('确定按钮触发');
+            },
+            cancel: function () {
+                console.log('插件运行取消');
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-2',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                if (1 == 1) {
+                    console.log('阻止插件继续执行');
+                    return false;
+                }
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-3',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                return date.replace(/-/g, '/');
+            }
+        })
+        // 自定义语言
+        var lang = {
+            title: '自定义标题',
+            cancel: '取消',
+            confirm: '确认',
+            year: '年',
+            month: '月',
+            day: '日',
+            hour: '时',
+            min: '分',
+            sec: '秒'
+        };
+        // 如果某个值未修改可不传 以上同 var lang = {title:'自定义标题'} 允许传空串
+        new Rolldate({
+            el: '#date-group3-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            lang: lang
+        })
+
+        // 设置默认日期 内部使用document.getElementById('date').bindDate = new Date('2019/05/13');
+        new Rolldate({
+            el: '#date-group4-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            value: '2017-10-21' //或2017-10-21 23:52:50
+        })
+
+        // el传dom对象，只支持单个
+        new Rolldate({
+            el: document.getElementById('date-group5-1'),
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+
+        // 分钟按指定数分隔
+        new Rolldate({
+            el: '#date-group6-1',
+            format: 'hh:mm',
+            minStep: 5
+        })
+        // 使用原生click
+        new Rolldate({
+            el: '#date-group7-1',
+            trigger: 'click'
+        })
+
+        // 其他示例
+        //日期判断
+        new Rolldate({
+            el: '#date-group8-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                var d = new Date(),
+                    d1 = new Date(date.replace(/\-/g, "\/")),
+                    d2 = new Date(d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate()); //如果非'YYYY-MM-DD'格式，需要另做调整
+
+                if (d1 < d2) {
+                    alert('不能小于当前的日期');
+                    return false;
+                }
+            }
+        })
+
+        //存在取消按钮弹窗
+        var tanchuangClass = document.getElementsByClassName("tanchuang");//弹框展示
+        for ( var i = 0; i < tanchuangClass.length; i++) {
+            tanchuangClass[i].index = i;
+            tanchuangClass[i].onclick = function ()
+            {
+                this.lastElementChild.previousElementSibling.style.display="block";
+                this.lastElementChild.previousElementSibling.firstElementChild.style.display="block";
+            }
+        }
+        var quxiaoClass = document.getElementsByClassName("quxiao");//点击取消
+        for ( var i = 0; i < quxiaoClass.length; i++) {
+            quxiaoClass[i].index = i;
+            quxiaoClass[i].onclick = function (e)
+            {
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.style.display="none";
+                this.parentElement.parentElement.style.display="none";
+            }
+        }
+        var divText = document.querySelectorAll(".nav div");//方式转换
+        for ( var i = 0; i < divText.length; i++) {
+            divText[i].index = i;
+            divText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.textContent;
+                this.parentElement.style.display="none";
+                this.parentElement.parentElement.style.display="none";
+            }
+        }
+        var abClass = document.getElementsByClassName("ab");//点击阴影
+        for ( var i = 0; i < abClass.length; i++) {
+            abClass[i].index = i;
+            abClass[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.style.display="none";
+                this.firstElementChild.style.display="none";
+            }
+        }
+        var divYinText = document.querySelectorAll(".yin .nav div");//方式转换
+        for ( var i = 0; i < divYinText.length; i++) {
+            divYinText[i].index = i;
+            divYinText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.getAttribute("name");
+                this.parentElement.style.display="none";
+                this.parentElement.parentElement.style.display="none";
+            }
+        }
+        //存在确认和取消按钮的相关弹窗
+        var twoButton = document.querySelectorAll(".sp-ct,.cc-fangshi");//弹框展示
+        for ( var i = 0; i < twoButton.length; i++) {
+            twoButton[i].index = i;
+            twoButton[i].onclick = function (e){
+                this.nextElementSibling.style.display="block";
+                this.nextElementSibling.firstElementChild.style.display="block";
+            }
+        }
+        var fangshiText = document.querySelectorAll(".fangshi>div");//方式转换
+        for ( var i = 0; i < fangshiText.length; i++) {
+            fangshiText[i].index = i;
+            fangshiText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.textContent;
+                for ( var i = 0; i < fangshiText.length; i++) {
+                    fangshiText[i].style.backgroundColor = "#fff";
+                }
+                this.style.backgroundColor = "#efefef";
+            }
+        }
+        var querenButton = document.querySelectorAll(".fangshi-queren,.fangshi-quxiao");//点击确认和取消
+        for ( var i = 0; i < querenButton.length; i++) {
+            querenButton[i].index = i;
+            querenButton[i].onclick = function (e){
+                this.parentElement.parentElement.style.display="none";
+                this.parentElement.parentElement.parentElement.style.display="none";
+            }
+        }
+        var hcClass = document.getElementsByClassName("hc"); //点击阴影部分
+        for ( var i = 0; i < hcClass.length; i++) {
+            hcClass[i].index = i;
+            hcClass[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.style.display="none";
+                this.firstElementChild.style.display="none";
+            }
+        }
+        document.getElementById("jisuan").onclick=function () { //费用计算
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-third-div\"><span class=\"wd-60\">曹雨虹(科级)" +
+                "</span><span class=\"cl-e0d\">￥1000</span></div><div class=\"apply-third-div\">" +
+                "<span class=\"cl-afa ta-lt\">2<span class=\"cl-afa-span\">(天)</span></span>" +
+                "<span class=\"cl-afa\">400<span class=\"cl-afa-span\">(基本费用)</span></span>" +
+                "<span class=\"cl-afa ta-rt\">100<span class=\"cl-afa-span\">(其他)</span></span>" +
+                "</div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("jisuan");
+            parent.parentNode.insertBefore(newContainer,parent)
+            // document.getElementById("fixed1").style.display = "block";
+        }
+        //添加旅程
+        document.getElementById("tianjia").onclick=function () {
+            document.getElementById("fixed2").style.display = "block";
+        }
+        document.getElementById("lvcheng-queren").onclick=function(e){
+            var lvchenginfo = document.getElementById("fixed2").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'>" +
+                "<div class=\"content\"><div class=\"apply-second-hua\"><span>" +
+                lvchenginfo[2].firstElementChild.nextElementSibling.textContent+"</span>" +
+                "<span class=\"wd-10 xuxian\">"+lvchenginfo[4].firstElementChild.nextElementSibling.textContent+
+                "<i></i></span><span>"+lvchenginfo[3].firstElementChild.nextElementSibling.textContent
+                +"</span><span class=\"wd-20 ta-rt cl-e0d\">￥"+lvchenginfo[5].firstElementChild.nextElementSibling.value+
+                "</span></div><div class=\"apply-second-hua\"><span class=\"cl-afa\">"
+                +lvchenginfo[0].firstElementChild.nextElementSibling.value+"</span><span>" +
+                "</span><span class=\"cl-afa\">"+lvchenginfo[1].firstElementChild.nextElementSibling.value
+                +"</span><span class=\"wd-10\"></span></div></div><div class=\"button-group\">" +
+                "<button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("tianjia");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加城间交通
+        document.getElementById("chengjian").onclick=function () { //添加城间交通
+            document.getElementById("fixed3").style.display = "block";
+        }
+        document.getElementById("chengjian-queren").onclick=function(e){
+            var chengjianinfo = document.getElementById("fixed3").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-second-hua\"><span class=\"wd-50\">"
+                +chengjianinfo[0].firstElementChild.nextElementSibling.value+"("+
+                chengjianinfo[1].firstElementChild.nextElementSibling.value+")</span>" +
+                "<span class=\"wd-15 ta-rt cl-e0d\">￥"+chengjianinfo[7].firstElementChild.nextElementSibling.value+
+                "</span></div><div class=\"apply-second-hua\"><span class=\"cl-afa\">"
+                +chengjianinfo[4].firstElementChild.nextElementSibling.textContent+"</span>" +
+                "<span class=\"ta-ct xuxian cl-afa xuxian-cl-afa\">"+chengjianinfo[6].firstElementChild.nextElementSibling.textContent+
+                "<i class=\"cl-afa\"></i></span><span class=\"ta-ct cl-afa\">"+
+                chengjianinfo[5].firstElementChild.nextElementSibling.textContent+
+                "</span><span class=\"wd-25 cl-afa ta-rt\">"+chengjianinfo[2].firstElementChild.nextElementSibling.value
+                +"</span></div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+            // newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+            //     "<div class=\"apply-second-hua\"><span class=\"wd-50\">"+
+            //     chengjianinfo[0].firstElementChild.nextElementSibling.value+
+            //     "("+chengjianinfo[1].firstElementChild.nextElementSibling.value+")" +
+            //     "</span><span>"+chengjianinfo[2].firstElementChild.nextElementSibling.value
+            //     +"</span></div><div class=\"apply-second-hua\">" +
+            //     "<span>"+chengjianinfo[4].firstElementChild.nextElementSibling.textContent+
+            //     "</span><span class=\"ta-ct xuxian\">"+
+            //     chengjianinfo[6].firstElementChild.nextElementSibling.textContent+"<i></i></span>" +
+            //     "<span class=\"ta-ct\">"+chengjianinfo[5].firstElementChild.nextElementSibling.textContent+
+            //     "</span><span class=\"ta-rt\">￥"+chengjianinfo[7].firstElementChild.nextElementSibling.value+"</span></div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("chengjian");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加住宿和补助
+        document.getElementById("zhusubuzhu").onclick=function () {
+            document.getElementById("fixed4").style.display = "block";
+        }
+        document.getElementById("zhusubuzhu-queren").onclick=function(e){
+            var zhusubuzhuinfo = document.getElementById("fixed4").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'>" +
+                "<div class=\"content\"><div class=\"apply-second-hua\">" +
+                "<span>"+zhusubuzhuinfo[0].firstElementChild.nextElementSibling.value+"(" +
+                zhusubuzhuinfo[1].firstElementChild.nextElementSibling.value+")</span><span>"+
+                zhusubuzhuinfo[3].firstElementChild.nextElementSibling.value+"天</span>" +
+                "</div><div class=\"apply-second-hua\">" +
+                "<span class=\"cl-afa\">"+
+                zhusubuzhuinfo[3].firstElementChild.nextElementSibling.value*zhusubuzhuinfo[4].firstElementChild.nextElementSibling.value+
+                "<span class=\"cl-afa-span\">(住宿)</span></span>" +
+                "<span class=\"cl-afa\">"+
+                zhusubuzhuinfo[3].firstElementChild.nextElementSibling.value*zhusubuzhuinfo[5].firstElementChild.nextElementSibling.value+
+                "<span class=\"cl-afa-span\">(伙食补助)</span></span>" +
+                "<span class=\"cl-afa\">" +
+                zhusubuzhuinfo[3].firstElementChild.nextElementSibling.value*zhusubuzhuinfo[6].firstElementChild.nextElementSibling.value+
+                "<span class=\"cl-afa-span\">(交通补助)</span></span>" +
+                "</div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button>" +
+                "</div></div>";
+            var parent = document.getElementById("zhusubuzhu");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加支付信息
+        document.getElementById("zhifuxinxi").onclick=function () {
+            document.getElementById("fixed5").style.display = "block";
+        }
+        document.getElementById("zhifuxinxi-queren").onclick=function(e){
+            var zhifuxinxiinfo = document.getElementById("fixed5").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-fifth-div\"><div><span class=\"wd-50\">" +
+                zhifuxinxiinfo[0].firstElementChild.nextElementSibling.value+
+                "("+zhifuxinxiinfo[2].firstElementChild.nextElementSibling.textContent+")" +
+                "</span><span class=\"wd-50 cl-e0d jt-end\">￥"+
+                zhifuxinxiinfo[4].firstElementChild.nextElementSibling.value+
+                "</span></div><div><span class=\"ta-lt cl-afa\">"+
+                zhifuxinxiinfo[1].firstElementChild.nextElementSibling.value+"</span>" +
+                "<span class=\"cl-afa jt-end\">"+zhifuxinxiinfo[3].firstElementChild.nextElementSibling.value+"</span>" +
+                "</div></div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button>" +
+                "</div></div>";
+            var parent = document.getElementById("zhifuxinxi");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加指标
+        document.getElementById("zhibiao").onclick=function () {
+            document.getElementById("fixed6").style.display = "block";
+        }
+        document.getElementById("zhibiao-queren").onclick=function(e){
+            var zhibiaoinfo = document.getElementById("fixed6").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML = "<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-fourth-div\"><div><span class=\"wd-50\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("guikou")+"(" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("xiangmu")+")" +
+                "</span><span class=\"wd-20 jt-end cl-e0d\">￥" +
+                zhibiaoinfo[1].firstElementChild.nextElementSibling.value+"</span></div><div><span class=\"wd-30 ta-lt cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("year")+"<span class=\"cl-afa-span\">(年)</span></span>" +
+                "<span class=\"wd-30 cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("money")+"<span class=\"cl-afa-span\">" +
+                "(总额)</span></span><span class=\"wd-40 cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("yue")+
+                "<span class=\"cl-afa-span\">(预算余额)</span></span></div></div></div>" +
+                "<div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("zhibiao");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+
+        var lvchengquxiaoClass = document.getElementsByClassName("lvcheng-quxiao");//点击取消
+        for ( var i = 0; i < lvchengquxiaoClass.length; i++) {
+            lvchengquxiaoClass[i].index = i;
+            lvchengquxiaoClass[i].onclick = function (e)
+            {
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.parentElement.style.display="none";
+            }
+        }
+        document.getElementById("cun").onclick=function () { //添加指标
+            document.getElementById("ab1").style.display="block";
+            document.getElementById("nav1").style.display="block";
+        }
+        document.getElementById("ab1").onclick=function () { //添加指标
+            document.getElementById("ab1").style.display="none";
+            document.getElementById("nav1").style.display="none";
+        }
+
+
+    }
+    // 滑块
+    const items = document.querySelectorAll('.item')
+    items.forEach(item => {
+        let touchStart, touchEnd
+        // 滑动开始, 记录开始位置
+        item.addEventListener('touchstart', function (e) {
+            touchStart = e.touches[0].clientX
+        })
+        // 滑动结束
+        item.addEventListener('touchend', function (e) {
+            let currentEle = e.currentTarget
+            touchEnd = e.changedTouches[0].clientX
+            // 向左滑, 显示删除按钮
+            if (currentEle.dataset.status === '0' && touchEnd - touchStart < -30) {
+                currentEle.dataset.status = 1
+                currentEle.classList.add('active')
+                document.body.onclick=function(e){
+                    console.log(e)
+                    e.stopPropagation()
+                    if (e.target.className == "del-btn") {
+
+                    } else {
+                        currentEle.dataset.status = 0
+                        currentEle.classList.remove('active')
+                    }
+                }
+                // $('body').click(function (e) {
+                //     console.log(e)
+                //     e.stopPropagation()
+                //     if (e.target.className == "del-btn") {
+                //
+                //     } else {
+                //         currentEle.dataset.status = 0
+                //         currentEle.classList.remove('active')
+                //     }
+                // })
+            }
+            // 向右滑, 隐藏删除按钮
+            if (currentEle.dataset.status === '1' && touchEnd - touchStart > 30) {
+                currentEle.dataset.status = 0
+                currentEle.classList.remove('active')
+            }
+        })
+    })
+    const btns = document.querySelectorAll('.del-btn')
+    btns.forEach(btn => {
+        // 删除按钮点击事件
+        btn.addEventListener('click', function (e) {
+            btn.parentElement.parentElement.parentElement.remove()
+        })
+    })
+    function name() {
+        var closeUpimg = document.getElementsByClassName(".close-upimg");
+        for ( var i = 0; i < closeUpimg.length; i++) {
+            closeUpimg[i].index = i;
+            closeUpimg[i].onclick = function (e){
+                var upSection = document.getElementsByClassName(".up-section");
+                for ( var i = 0; i < upSection.length; i++) {
+                    upSection[i].style.display="none";
+                }
+            }
+        }
+        document.querySelectorAll("[data-toggle=\"lightbox\"]").lightbox();
+        // $('.close-upimg').click(function () {
+        //     $('.up-section').hide()
+        // })
+        // $('[data-toggle="lightbox"]').lightbox();
+    }
+</script>

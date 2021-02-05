@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>公务接待费报销</title>
+		<meta charset="utf-8">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+		<meta name="renderer" content="webkit">
+
+		<link rel="stylesheet" href="../font/iconfont.css">
+		<link rel="stylesheet" href="../css/reset.css">
+		<link rel="stylesheet" href="../css/data.css">
+		<link rel="stylesheet" href="../css/zui.css">
+		<link href="../css/common.css" type="text/css" rel="stylesheet">
+		<link href="../css/index.css" type="text/css" rel="stylesheet">
+
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.rotate.min.js"></script>
+		<script src="../js/rem.js"></script>
+		<script type="text/javascript" src="../js/rolldate.min.js"></script>
+		<script src="../js/flyformdatapageapp.js"></script>
+		<script src="../js/flyeditpageapp.js"></script>
+		<script src="../js/pubToolsapp.js"></script>
+		<script src="../js/pubUtilapp.js"></script>
+		<script src="../js/flycommonselectapp.js"></script>
+		<script src="../js/flyapp.js"></script>
+		<script type="text/javascript" src="../js/ajaxPubapp.js"></script>
+		<script src="../js/outPersonInput.js"></script>
+		<script src="../js/common.js"></script>
+
+		<script type="text/javascript">
+			var loginInsId_a = "";
+			var loginDeptId_a = "";
+			var loginPerId_a = "";
+
+
+			//实现flyeditpage接口，保存成功后导向显示页面。dataKey通用程序已编码
+			function toShowPage(dataKey, authFlag, flag) {
+
+				window.location.href = "officialExpenseShow.html?flag=Show&dataKey=" + dataKey + "&authFlag=" + authFlag +
+					"&progId=" +
+					flyEditPageGetProgId();
+			}
+
+			/**
+			         * 保存校验。实现flyeditpage接口。
+			         * 实现js接口.修改或保存提交时，当前特殊业务进行校验。
+			         * (必输、编码合规性、数字、长度、非法字符这里不用校验，程序已自动校验。)
+				
+			         * @return true or false
+			         */
+			function flyEditPageSubmitCheck() {
+
+				//设置为录入人不选择指标，则不校验。
+				// if (isPostSetPayIndex())
+				return true;
+
+				//指标校验。
+				// return payEditPageIndexCheck(1);
+
+
+			}
+			/**
+			 * 审批校验。实现flyeditpage接口。审批时，校验提交数据是否符合审批提交要求。
+			 * 审批时，才需要实现该接口，没有审批，不需要。
+			 * @param fromId  输入区域form。
+			 * @return 合规返回true；不合规返回false
+			 */
+			// function appPageCheck(fromId) {
+
+			// 	return true;
+			// }
+
+			/**
+			 * 后台服务器操作接口。
+			 * 1、确定servlet地址即可
+			 * 2、后台取值两个，flag、opValue。
+			 * 3、根据flag判断，拆串opValue，进行处理
+			 * @param flag     操作标识
+			 * @param opValue  处理的值，一般为拼串。到后台要拆串
+			 * @return 处理结果值。正确返回相应值或标识，错误返回错误标识，由前台提示
+			 */
+			function toServerOp(flag, opValue) {
+
+				if (opValue && opValue.indexOf("|々|") > 0)
+					opValue = opValue.replace(/\|々\|/g, "々")
+
+				var info = "opValue=" + opValue;
+				var result = getHttpResponse("/fwis/mssl/payOfficialExpenseSrv", flag, info);
+
+				if ((flag == "AddSave" || flag == "UpdSave" || flag == "AddSaveApprove" || flag == "UpdSaveApprove")) {
+
+					var arr = result.split("|");
+
+					if (arr[0] == "RepeatSubsidy") {
+
+						alert("抱歉，" + arr[1] + "重复报销,请重新调整");
+						result = arr[0];
+
+					} else if (arr[0] == "RepeatReceipt") {
+
+						alert("抱歉，" + arr[1] + "发票重复,请重新调整");
+						result = arr[0];
+					} else if (arr[0] == "RepeatReceiptInput") {
+
+						alert("抱歉，您录入了重复的发票,请重新调整");
+						result = arr[0];
+					}
+				}
+
+				return result;
+			}
+
+			/**
+			         * 选择
+			         * 弹出选择页面,参数说明
+			         * @ progId      选择程序代码，不可为空
+			         * @ preCon      选择程序前置条件，可为空。根据定义，对应条件值，如不传递则nbsp，返回则传递相应值，如nbsp|001|T03。则传递第二、第三个值，第一个不传递。
+			         * @ query       选择程序查询条件，可为空
+			         * @ selFlag     返回值拼串。根据定义，对应返回值，0不返回，1返回。如"1|0|1"，则返回第一个和第三个值。
+			         * @ backFun     返回值调用的函数。
+			         * @ selType     选择模式，S，单选；M，多选
+			         * @ conSql      特殊情况时加入自己需要的sql
+			         * @ receiveObj  接收返回值对象
+			         * @ orderBy     排序语句
+			         * @ showModel   显示模式。A，一行内容2个值，一个左对齐、一个右对齐；T，两行，4个值，每行2个。不够显示值的，以空
+			         * @ showValue   显示字段。如果为定义的下拉列表选择，为SELECT；
+			         如果为定义的弹窗选择，将显示数据序号转为整数数组，显示的数字不为零，为返回拼串拆分数组的序号。如5|0|3|0|1，则第一个显示为
+			         第5个内容，第二个不显示，第二个显示为第3个内容
+				
+			         * @ return      单选，返回一个数组[];多选返回组合数组，[[],[],[]]，组合数组中每个数组是选中的一个值。
+				
+			         回调函数setSelAssetType(assetArr)
+			         */
+			function getSel(obj, typeFlag) {
+
+				var selProgId = "";
+				var preCon = "";
+				var query = "";
+				var selType = "S"; //默认单选
+				var selFlag = "";
+				var backFun = "";
+
+				var conSql = "";
+				var orderBy = "";
+				var showModel = "A"; //默认一行显示
+				var showValue = "";
+
+				//同行人为多选，项目、指标为单选
+				if (typeFlag == "I") { //项目
+
+					selProgId = "projectSelPage";
+					preCon = loginInsId_a + "|nbsp|nbsp|nbsp|nbsp|nbsp";
+					backFun = "commonSelectSetSelInput";
+					selFlag = "0|1|0|0|0|0|0|1";
+					showValue = "7|4|0|0|0|0|0|0";
+
+				} else if (typeFlag == "D") { //指标
+
+					selProgId = "indexDetailSelect";
+					preCon = loginInsId_a;
+					backFun = "indexSet";
+					selFlag = "1|1|1|1|1";
+					showValue = "4|3|0|0|0|0|0|0";
+					conSql = " i_leaf='Y'";
+					orderBy = "i_year desc,case when decom_user_id in ('" + loginDeptId_a + "','" + loginPerId_a +
+						"')  then 1 ELSE 6 END";
+
+				} else if (typeFlag == "P") { //人员
+
+					selProgId = "personSelectPage";
+					preCon = loginInsId_a + "|nbsp";
+					backFun = "commonSelectSetSelArrLabel";
+					selType = "multiple";
+					selFlag = "1|0|1|1|0|1";
+					showValue = "0|0|5|0|0|2";
+					orderBy = "(case when sys_dept_id ='" + loginDeptId_a + "' then 1 ELSE 6 END)";
+
+				} else if (typeFlag == "O") { //编外人员
+
+					openOutPersonInputSel(obj, loginInsId_a);
+					return;
+
+				} else if (typeFlag == "B") { //借款单
+
+					var appPer = document.getElementById("personSelId").value;
+					if (appPer.trim().length < 1) {
+
+						alert("请选择报销人");
+						return;
+					}
+
+					selProgId = "borrowBillPage";
+					preCon = appPer + "|Y|Y";
+					backFun = "borrowSet";
+					selType = "";
+					selFlag = "1|1|1|1";
+					showValue = "1|2|0|0";
+
+				} else if (typeFlag == "A") { //申请单
+
+					// var appPer  = document.getElementById("personSelId").value;
+					var appPer = document.getElementById("personSelIdName").getAttribute("flyvalue");
+					if (appPer.trim().length < 1) {
+
+						alert("请选择报销人");
+						return;
+					}
+
+					selProgId = "officialApplyPage";
+					preCon = appPer + "|Y|Y";
+					//preCon = "nbsp|Y|Y";
+					backFun = "applySet";
+					selType = "";
+					selFlag = "1|1|1";
+					//selType = "multiple";
+					conSql = " (exp_status_id<>'Y' or exp_status_id is null) ";
+					showValue = "1|2|0";
+				} else if (typeFlag == "S") { //支出事项
+
+					selProgId = "payStandardSelPage";
+					preCon = loginInsId_a + "|T";
+					backFun = "payStandardSet";
+					selType = "";
+					selFlag = "1|1|1|1";
+					showValue = "1|3|0|0";
+
+				} else if (typeFlag == "T") { //第三方支付单位
+
+					thirdPayInsInputSel(obj, loginInsId_a, 1);
+					return;
+
+				}
+
+
+				commonSelectAppPageInit(selProgId, preCon, query, selFlag, backFun, selType, conSql, obj, orderBy, showModel,
+					showValue);
+				//commonSelectPageInit(selProgId,preCon,"",90,80,3,10,selFlag,backFun,selType,conSql,obj,orderBy);
+
+			}
+
+			/**
+			 * 申请单选择回调函数，设置申请单，并将申请单信息从后台查询，置入报销单。
+			 置入信息：1、主信息；2、指标；3、明细。
+			 * @param arr  选择返回指标信息数组，单选，返回一维数组；多选，返回二维数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function applySet(selArr, obj) {
+
+				//ins_id,a_code,a_name
+				obj.setAttribute("flyvalue", selArr[1]);
+				obj.value = selArr[2];
+
+				//取得并设置申请单信息
+				var appInfo = toServerOp("AppInfo", selArr[0] + "^" + selArr[1]);
+				var idArr = ["reasonId", "itemId", "startDate", "endDate",
+					"guestIns", "guestNum", "guestName", "guestPosition",
+					"officalDeptSelId", "officalPersonSelId", "togetherId", "togetherNumId",
+					"addrId", "fixPoint", "fixPointDesc", "appBillAmtId", "indexTable",
+					"guestTable", "detailTable", "aDesc"
+				];
+
+
+				var arr = appInfo.split("々");
+				arr[1] = arr[1].replace(/\|/g, "^")
+				arr[2] = arr[2].replace(/\|/g, "^")
+				arr[3] = arr[3].replace(/\|/g, "^")
+
+				var dataArr = arr[0].split("|");
+				dataArr.push(arr[1]);
+				dataArr.push(arr[2]);
+				dataArr.push(arr[3]);
+				dataArr.push(arr[4]);
+
+				flyFormDataPageShowTagsData(idArr, dataArr, "E");
+
+				// amtAutoCount();
+
+				flyEditPageSetPayInfo();
+
+				return;
+
+			}
+
+			/**
+			 * 申请单选择回调函数，设置申请单，并将申请单信息从后台查询，置入报销单。
+			 置入信息：1、主信息；2、指标；3、明细。
+			 * @param arr  选择返回指标信息数组，单选，返回一维数组；多选，返回二维数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function payStandardSet(selArr, obj) {
+
+				//p_code,p_name,p_desc,p_amt
+				obj.setAttribute("flyvalue", selArr[0]);
+				obj.value = selArr[1];
+
+				//payStandard_info，payStandard_money
+				document.getElementById("payStandard_info").value = selArr[2];
+				document.getElementById("payStandard_money").value = selArr[3];
+
+				return;
+			}
+
+			/**
+			 * 实现flycommonselect接口，在调用commonSelectSetSelArrLabel方法前，在同行人员费用区，生成同行人员费用情况。
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function commonSelectSetSelArrLabelReback(selArr, obj) {
+
+				/*
+				            var str = "'"+document.getElementById("personSelId").value+"'";
+				            for(var i=0;i<selArr.length;i++)
+				                str+= ",'"+selArr[i][2]+"'";
+				
+				            perAmtCount(str);
+				
+				
+				            if(obj.id == "togetherId"){
+				
+				               document.getElementById("togetherNumId").value = selArr.length;
+				
+				               togetherPerUpdTip();//增加人员时，提示是否重新计算人员费用
+				            }
+				            */
+				return true;
+			}
+
+			/**
+			 * 实现flycommonselect接口,删除页面已选文件或数据后，可实现该方法从后台删除实际数据。
+			 * @param obj   span 对象。
+			 * @return 执行成功返回true；失败返回false
+			 */
+			function commonSelectDelSelLabelDataAfter(obj) {
+
+				if (obj.id != "togetherId")
+					return true;
+
+				togetherPerUpdTip(); //删除人员后，提示是否重新计算人员费用
+
+				return true;
+
+			}
+
+			/**
+			 * 预算指标区域，选择指标回调函数
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return repeatCount
+			 */
+			function indexSet(selArr, obj) {
+
+				obj.value = selArr[4];
+				obj.setAttribute("flyvalue", selArr[0] + "~" + selArr[1]);
+
+				document.getElementById("indic_amt").value = selArr[2];
+				document.getElementById("indic_balance").value = selArr[3];
+
+				return;
+
+			}
+
+			/**
+			 * 改变部门时，改变人员下拉列表为改变后部门的人员
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function changeDept(obj) {
+
+				var deptSelId = obj.id;
+				var personSelId = "";
+
+				if (deptSelId == "deptSelId")
+					personSelId = "personSelId";
+				else if (deptSelId == "officalDeptSelIdName")
+					personSelId = "officalPersonSelIdName";
+
+				var personObj = document.getElementById(personSelId);
+				personObj.options.length = 0;
+
+				//生成部门所有人员下拉列表
+				commonSelectAppSelectInit("personNewSel", obj.value, "", personSelId, ""); //人员下拉列表
+}
+			/**
+			     * 新增、复制时进入页面：
+			     1、从后台取得自动生成的申请单号、登录人部门、姓名。
+			     2、生成人员下拉列表。
+			     3、设置默认申请部门、申请人员为登录人员
+					
+			     * @return
+			     */
+			function setInitInfo(dateKey) {
+
+				// alert(flyEditPageGetFlag())
+				if (flyEditPageGetFlag() == "Add" || flyEditPageGetFlag() == "Copy") {
+
+					var billInfo = toServerOp("AddBillInfo", dateKey);
+
+					//billInfo格式：billId|deptId|personId
+					var arr = billInfo.split("|");
+
+					//设置申请单号
+					document.getElementById("billId").value = arr[0];
+
+					// //设置申请部门为登录人部门
+					// var deptObj = document.getElementById("deptSelIdName");
+					// deptObj.value = arr[1];
+
+					//生成登录人部门所有人员下拉列表(根据登录人部门代码生成)。
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[1], "", "personSelId", loginPerId_a, ""); //人员下拉列表
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[1], "", "officalPersonSelIdName", loginPerId_a,
+						""); //人员下拉列表
+					// //设置登录人为申请人
+					// var perObj = document.getElementById("personSelIdName");
+					// perObj.value = arr[2];
+
+					//设置申请人为出差人
+					// var deptName = deptObj.options[deptObj.selectedIndex].text;
+					// var perName = perObj.options[perObj.selectedIndex].text;
+
+					var deptName = document.getElementById("deptSelIdName").value;
+					var perName = document.getElementById("personSelIdName").value;
+
+					var perArr = [
+						[arr[1], deptName, arr[2], perName]
+					];
+
+					var obj = document.getElementById('togetherId');
+
+					commonSelectSetSelArrLabel(perArr, obj);
+
+				} else if (flyEditPageGetFlag() == "Upd") {
+
+					var billInfo = toServerOp("UpdBillInfo", dateKey);
+
+					//billInfo格式：deptId|personId
+					var arr = billInfo.split("|");
+
+					//生成登录人部门所有人员下拉列表(根据登录人部门代码生成)。
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[0], "", "personSelId", arr[1], ""); //人员下拉列表
+					
+					document.getElementById("finalMoneyData").innerText = document.getElementById("planAmt").value;
+				}
+				return;
+			}
+
+			function init() {
+
+				//取得登录单位
+				loginInsId_a = getGlobleInsId();
+
+				//取得登录部门
+				loginDeptId_a = getGlobleDeptId();
+
+				//取得登录人员
+				loginPerId_a = getGloblePerId();
+
+				//取得出差申请行程是否必输标志,Y必输
+				var hotelWay = getGloblePayTravelApp();
+
+				if (hotelWay == "Y") {
+
+					// var obj = document.getElementById("planAmt");
+					// obj.style.cssText = "background-color:#fafafa;text-align:right;";
+					// obj.readOnly = true;
+				}
+
+				//根据设置，确定指标为申请人输入，还是特定岗位输入。
+				flyEditPageSetIndexArea();
+
+				flyEditPageSetApp("Y"); //设置页面需要审批
+				flyEditPageSetEditObjId("editForm"); //设置页面编辑显示区域id
+				//console.log("loginInsId_a:"+loginInsId_a+";loginDeptId_a:"+loginDeptId_a);
+				commonSelectAppSelectInit("deptSel", loginInsId_a, "", "deptSelId", loginDeptId_a, ""); //部门下拉列表
+				commonSelectAppSelectInit("deptSel", loginInsId_a, "", "officalDeptSelIdName", loginDeptId_a, ""); //部门下拉列表
+				commonSelectAppSelectInit("baseSelectSel", "T0018|" + loginInsId_a, "", "positionSelId1", "", ""); //级别
+				commonSelectAppStaticSelectInit("designated");
+				commonSelectAppStaticSelectInit("sex");
+				commonSelectAppStaticSelectInit("payTool_one");
+				commonSelectAppStaticSelectInit("payTool_two");
+				//commonSelectAppSelectInit("baseSelectSel", "T0050|" + loginInsId_a, "", "defType", "", ""); //出差类别
+				//初始化页面参数
+				flyEditPageGetParam();
+
+				setInitInfo(flyEditPageGetUpdKey()); //设置申请单号、申请人部门、名称
+
+				pubToolsImgSelEventAdd("cun", "ab1");
+			}
+		</script>
+	</head>
+
+	<body onLoad="init()">
+		<div class="box">
+			<div id="editForm" class="apply">
+				<div class="h-70">
+					<a href="../mainpage.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+					<span class="ft-35">公务接待费报销</span>
+					<span></span>
+				</div>
+				<div class="apply-first">
+					<div class="h-120">
+						<span><label flyflag='3' class="flyListPageStarLabel">*</label>报销单号</span>
+						<input id='billId' type="text" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span><label flyflag='3' class="flyListPageStarLabel">*</label>报销名称</span>
+						<input id='billName' type="text" flyflag='0' necessary='1' onblur='neceCheck(this)' maxlength='50' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>报销部门</span>
+						<input type="text" flyflag='2' id="deptSelIdName" onchange="changeDept(this);" readonly>
+						<div class="ab">
+							<div class="nav" id="deptSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>报销人员</span>
+						<input type="text" flyflag='2' id="personSelIdName" readonly>
+						<div class="ab">
+							<div class="nav" id="personSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span><label flyflag='3' class="flyListPageStarLabel">*</label>申&nbsp;请&nbsp;单</span>
+						<input id="appBillSelId" type="text" flyflag='2' necessary='1' onblur='neceCheck(this)' onclick="getSel(this,'A')">
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>申请金额</span>
+						<input id="appBillAmtId" type="text" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>报销总计</span>
+						<input id="planAmt" type="text" value="0" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>公务卡</span>
+						<input id="pubAmtId" type="text" value="0" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>个人转账</span>
+						<input id="cashAmtId" type="text" value="0" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>第三方转账</span>
+						<input id="thirdAmtId" type="text" value="0" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>冲销借款单</span>
+						<input id="borrowId" type="text" flyflag='2'>
+						<span></span>
+					</div>
+					<div class="h-120" style="display:none;">
+						<span>冲销金额</span>
+						<input id="offAmt" type="text" flyflag='0' value="0">
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>事&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由</span>
+						<input id="reasonId" type="text" flyflag='0' maxlength="100" onkeyup="flyCheckStrInput(this);">
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+						<input id="itemId" type="text" flyflag='2' onclick="getSel(this,'I')" readonly>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span>开始日期</span>
+						<input id="startDate" type="text" flyflag="0" class="wd-60" onclick="pubToolsDateSel(this);" readonly>
+						<span class="iconfont icon-z043 "></span>
+					</div>
+					<div class="h-120">
+						<span>结束日期</span>
+						<input id="endDate" type="text" flyflag="0" class="wd-60" onclick="pubToolsDateSel(this);" readonly>
+						<span class="iconfont icon-z043 "></span>
+					</div>
+					<div class="h-120">
+						<span>来宾单位</span>
+						<input id="guestIns" type="text" flyflag='0' maxlength='50' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>来宾人数</span>
+						<input id="guestNum" type="text" flyflag='0' onkeyup="flyCheckDigitInput(this,'I');">
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>主宾姓名</span>
+						<input id="guestName" type="text" flyflag='0' maxlength='30' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>主宾职务</span>
+						<input id="guestPosition" type="text" flyflag='0' maxlength='30' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>接待部门</span>
+						<input id="officalDeptSelId" type="text" flyflag='2' readonly>
+						<div class="ab">
+							<div class="nav" id="officalDeptSelIdName">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>接待负责人</span>
+						<input type="text" flyflag='2' id="officalPersonSelId" readonly>
+						<div class="ab">
+							<div class="nav" id="officalPersonSelIdName">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span>陪同人员</span>
+						<span id="togetherId" flyflag='4' onclick="getSel(this,'P')"></span>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>陪同人数</span>
+						<input id="togetherNumId" type="text" flyflag='0' onkeyup="flyCheckDigitInput(this,'I');">
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>接待地点</span>
+						<input id="addrId" type="text" flyflag='0' maxlength='100' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>是否定点</span>
+						<input id="fixPoint" type="text" flyflag='2' readonly>
+						<div class="ab">
+							<div class='nav' id="designated">
+								<div flyvalue='N'>否</div>
+								<div flyvalue='Y'>是</div>
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span>非定点说明</span>
+						<input id="fixPointDesc" type="text" flyflag='0' maxlength='200' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>备注</span>
+						<input type="text" flyflag='0' maxlength='200' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+				</div>
+
+				<span flyflag='0' style="display: none" ></span>
+				<span flyflag='0' style="display: none" ></span>
+
+				<div class="wd-100 bd-ef pd-20">
+					<div class="father">
+						<div class="add-img">
+							<img src="../img/jiahao.png" class="cun" id="cun">
+						</div>
+					</div>
+					<div class="ab1" id="ab1">
+						<div class="nav1" id="nav1">
+							<div class="tu">
+								<span>选择图片</span>
+								<section class="z_file fl">
+									<input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp"
+									 multiple />
+								</section>
+							</div>
+							<div class="pai">
+								<span>拍照</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<div class="pai">
+								<span>扫码</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<div class="pai">
+								<span>连续扫码</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<p class="quxiao">取消</p>
+						</div>
+					</div>
+				</div>
+
+				<!--
+				<div class="mt-20 h-80 center">
+					<span class="mb-10 cs-pt cl-e65">添加相关附件</span>
+				</div>
+				-->
+
+				<!--指标区域-->
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<div id="indexTable" class="apply-fourth apply-space" flyindex="N" flyflag='18' flyset="6|0,2|3|0,1|1|2">
+					<div class="container" style="display:none">
+						<div class="item" data-status="0">
+							<div class="content" flyshow="9" flyflag='9' flyvalue="" onclick="windowShowDataInfo(this,0)">
+								<div class="apply-fourth-div">
+									<div>
+										<span class="wd-50" flyshow='0'></span>
+										<span class="wd-20 jt-end cl-e0d">￥<span flyshow='0'>500</span></span>
+									</div>
+									<div>
+										<span class="wd-10 ta-lt cl-0089D0"><span flyshow='0'>2020</span><span class="cl-afa-span">(年)</span></span>
+										<span class="wd-60 cl-0089D0"><span flyshow='0'>2000</span><span class="cl-afa-span">(总额)</span></span>
+										<span class="wd-60 cl-0089D0"><span flyshow='0'>1000</span><span class="cl-afa-span">(余额)</span></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					<div class="cs-pt cl-e65 zhibiao">
+						<span onclick="openWindowData(this)">指标预算</span>
+						<div class="none">
+							<div class="fixed fixed6" id="fixed-4">
+								<div class="lvcheng">
+									<div class="zhibiaoinfo">
+										<span>支出指标</span>
+										<input type="text" flyvalue="" class="wd-60" onclick="getSel(this,'D')" readonly>
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div>
+										<span>指标金额</span>
+										<input id="indic_amt" type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div>
+										<span>指标余额</span>
+										<input id="indic_balance" type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div>
+										<span>支出金额</span>
+										<input type="text" class="wd-60" onfocus="this.defaultValue = this.value;" onkeyup="flyCheckDigitInput(this,'D');">
+										<span></span>
+									</div>
+									<div>
+										<span>对应支出项</span>
+										<input type="text" class="wd-60" maxlength="100" onkeyup="flyCheckStrInput(this);">
+										<span></span>
+									</div>
+									<div>
+										<span>备注</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<div id="guestTable" class="apply-third apply-space" flyindex="N" flyflag='18' flyset="7|1|6|2|3,1|5,1">
+					<!--            1^111^111^M~男^111^bd1006~国家级副职^ -->
+					<div class="container" style="display: none">
+						<div class="item" data-status="0">
+							<div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,1)">
+								<div class="apply-third-div">
+									<span class="wd-60" flyshow="0"></span>
+									<span class="cl-e0d"><span flyshow="0"></span></span>
+								</div>
+								<div class="apply-third-div">
+									<span class=" wd-60 ta-lt cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(姓名)</span>
+									</span><span class="wd-60 cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(性别)</span></span>
+									<span class="wd-60 cl-0089D0 ta-rt"><span flyshow="0">10</span><span class="cl-afa-span">(职务)</span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="cl-e65 cs-pt baoxiaodetail apply-third-last">
+						<span onclick="openWindowData(this)">来宾名单</span>
+						<div class="none">
+							<div class="fixed fixed1" id="fixed-1">
+								<div class="lvcheng yin">
+									<div class="baoxiaozhichu">
+										<span>单位</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>姓名</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div class="tanchuang" onclick="openSelectWindows(this)">
+										<span>性别</span>
+										<input flyvalue="" type="text" readonly>
+										<div class="ab">
+											<div class='nav' id="sex">
+												<div flyvalue='M'>男</div>
+												<div flyvalue='F'>女</div>
+											</div>
+										</div>
+										<span class="iconfont icon-z043"></span>
+									</div>
+									<div>
+										<span>职务</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div class="tanchuang" onclick="openSelectWindows(this)">
+										<span>级别</span>
+										<input flyvalue="" type="text" id="guestGradeSelId" readonly>
+										<div class="ab">
+											<div class="nav" id="positionSelId1">
+
+											</div>
+										</div>
+										<span class="iconfont icon-z043"></span>
+									</div>
+									<div>
+										<span>备注</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span  onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'addNumInfo','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<div id="detailTable" class="apply-third apply-space" flyindex="N" flyflag='18' flyset="11|1,1|6|3|4|5">
+
+					<div class="container" style="display: none">
+						<div class="item" data-status="0">
+							<div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,1)">
+								<div class="apply-third-div">
+									<span class="wd-60" flyshow="0"></span>
+									<span class="cl-e0d">￥<span flyshow="0"></span></span>
+								</div>
+								<div class="apply-third-div">
+									<span class=" wd-60 ta-lt cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(标准金额)</span>
+									</span><span class="wd-60 cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(单价)</span></span>
+									<span class="wd-60 cl-0089D0 ta-rt"><span flyshow="0">10</span><span class="cl-afa-span">(数量)</span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="cl-e65 cs-pt baoxiaodetail apply-third-last">
+						<span onclick="openWindowData(this);">接待支出事项</span>
+						<div class="none">
+							<div class="fixed fixed1" >
+								<div class="lvcheng yin">
+									<div class="baoxiaozhichu">
+										<span>支出事项</span>
+										<input type="text" flyvalue="" class="wd-60" onclick="getSel(this,'S')" readonly>
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div>
+										<span>说明</span>
+										<input  flyvalue="" id="payStandard_info" type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>标准</span>
+										<input id="payStandard_money" value="0" type="text" readonly class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>单价</span>
+										<input type="text" class="wd-60"  onblur="payMoneyCalcuFun(this,3,4,5,'*')" onfocus="this.defaultValue = this.value;"
+										 onkeyup="flyCheckDigitInput(this,'D');">
+										<span></span>
+									</div>
+									<div>
+										<span>数量</span>
+										<input type="text" class="wd-60"  onblur="payMoneyCalcuFun(this,3,4,5,'*')" onfocus="this.defaultValue = this.value;"
+										 onkeyup="flyCheckDigitInput(this,'I');">
+										<span></span>
+									</div>
+									<div>
+										<span>合计</span>
+										<input type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div class="shijian1">
+										<span>日期</span>
+										<input id="date-group1-3" class="wd-60" type="text" onclick="pubToolsDateSel(this);" readonly>
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div class="tanchuang"  onclick="openSelectWindows(this)">
+										<span>支付类别</span>
+										<input type="text" flyvalue="" class="wd-50" onchange="flyEditPageSetAttch(this);" readonly>
+										<div class="ab">
+											<div class="nav" id="payTool_one">
+												<div flyvalue="C">个人账户</div>
+												<div flyvalue="P">公务卡</div>
+												<div flyvalue="T">第三方转账</div>
+											</div>
+										</div>
+										<span class="iconfont icon-z043" style="margin-right: 20px"></span>
+									</div>
+									<div>
+										<span>第三方单位</span>
+										<input flyvalue="" type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>电子票据</span>
+										<input type="text" flyvalue="" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span  onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'addNumInfoS','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'addNumInfoS','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<input id="aDesc" type="text" flyflag='0' style="display:none;">
+
+				<!--支付信息-->
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<div id="payTableId" class="apply-fifth apply-space applyLastDiv" flyflag='18' flyset="5|0,2|4,1|3|1,1|2">
+
+					<div class="container" style="display: none">
+						<div class="item" data-status='0'>
+							<div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,0)">
+								<div class="apply-fifth-div">
+									<div>
+										<span class="wd-50"><span flyshow="0">收款人1</span>(<span flyshow="0">公务卡</span>)</span>
+										<span class="wd-50 cl-e0d jt-end">￥<span flyshow="0">1000</span></span>
+									</div>
+									<div>
+										<span class="wd-30 cl-afa ta-lt"><span flyshow="0">亚运村支行</span></span>
+										<span class="wd-70 cl-afa jt-end"><span flyshow="0">222222222222222222222</span></span>
+									</div>
+								</div>
+							</div>
+							<div class="button-group">
+								<button class="del-btn">删除</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="cs-pt cl-e65 zhifuxinxi" id="zhifuxinxi">
+						<span onclick="openWindowData(this);">支付信息</span>
+						<div class="none">
+							<div class="fixed fixed5" id="fixed-3">
+								<div class="lvcheng">
+									<div>
+										<span>收款人</span>
+										<input id="payee" flyvalue="" type="text" class="wd-60" onclick="setPerson();" readonly>
+										<span></span>
+									</div>
+									<div>
+										<span>开户行</span>
+										<input type="text" flyvalue="" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>账号</span>
+										<input type="text" class="wd-60" onfocus="this.defaultValue = this.value;" onkeyup="flyCheckDigitInput(this,'I');">
+										<span></span>
+									</div>
+									<div>
+										<span>金额</span>
+										<input type="text" class="wd-60" onfocus="this.defaultValue = this.value;" onkeyup="flyCheckDigitInput(this,'D');">
+										<span></span>
+									</div>
+									<div class="tanchuang" onclick="openSelectWindows(this)">
+										<span>支付类别</span>
+										<input type="text" flyvalue="" class="wd-50" onchange="setPayee(this);" readonly>
+										<div class="ab">
+											<div class="nav" id="payTool_two">
+												<div flyvalue="C">储蓄卡</div>
+												<div flyvalue="P">公务卡</div>
+												<div flyvalue="T">第三方转账</div>
+											</div>
+										</div>
+										<span class="iconfont icon-z043" style="margin-right: 20px"></span>
+									</div>
+									<div>
+										<span  onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="apply-footer">
+					<div class="moneyFinal">
+						<span class="cl-afa">合计：</span>
+						<span class="cl-e0d" id="finalMoneyData">0</span>
+					</div>
+					<div id="footerSaveButton" class="footerSave">
+						<a href="#" onClick="flyEditPageAddSave();">保存</a>
+					</div>
+					<div class="footerSA">
+						<a href="#" onClick="flyEditPageSaveApprove();">保存审批</a>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="../js/zui.js"></script>
+<script src="../js/imgUp.js"></script>
+

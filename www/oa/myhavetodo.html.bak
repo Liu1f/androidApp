@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>已办</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    
+    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+    
+    <script src="../js/rem.js"></script>    
+    
+    <script src="../js/flylistpageapp.js"></script>    
+    <script src="../js/flyapp.js"></script>
+    <script src="../js/flynav.js"></script>
+    <script src="../js/pubUtilapp.js"></script>
+    <script type="text/javascript" src="../js/ajaxPubapp.js"></script>
+    
+<script type="text/javascript"> 
+
+/**
+   * 后台服务器操作接口。
+   * 1、确定servlet地址即可   
+   * 2、后台取值两个，flag、opValue。
+   * 3、根据flag判断，拆串opValue，进行处理
+   * @param flag     操作标识
+   * @param opValue  处理的值，一般为拼串。到后台要拆串
+   * @return 处理结果值。正确返回相应值或标识，错误返回错误标识，由前台提示   
+   */
+   
+function toServerOp(flag,opValue){
+	
+	if(flag=="ListQuery")
+	    flag = "ManageListQueryApp";
+	 else if(flag=="TurnPage")
+	    flag = "ManageTurnPageApp";
+	
+   var info = "opValue="+opValue;
+	 var result = getHttpResponse("/fwis/mssl/workflowExcSrv",flag,info);	
+	
+	 return result;	    
+}
+
+function init(){
+	
+	flyListPageSetAuth();
+	
+	progId_a = flyListPageGetProgId();
+	
+	flyListPageQuery();
+	
+	pubUtilInputEnterQuery("flylistpageappQueryId","flyListPageQuery");
+}
+</script>
+</head>
+
+<body onLoad='init()'>
+    <div class="main navpage">
+    	
+    	
+    	  <div class="page-title">
+         <a href="../mainpage.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+         <span class="ft-35">已办</span>
+         <span></span>
+        </div>
+     
+        <div class="h-110 nav-input">
+            <input type="text" id="flylistpageappQueryId" placeholder="输入姓名、单号、单名、部门">
+        </div>
+
+        <div class="container" id="flyListPageTableList">
+            <!-- 0 默认状态, 1 左滑状态 -->
+            <div class="item list" data-status='0'>
+                <div class="content list"  flyflag="9"    onClick="flynavToApproveShow(this,'S');">
+                    <div class="nav-hang">
+                        <span  flyflag="0"></span>
+                        <div class="cl-a9b">
+                            <span  flyflag="0"></span>
+                            <span  flyflag="0"></span>
+                        </div>
+                        <div class="cl-a9b">
+                            <span  flyflag="0"></span>
+                            <span  flyflag="0"></span>
+                        </div>
+                        <span class="iconfont icon-z043"></span>
+                    </div>
+                </div>
+                <div class="button-group list">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item list" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content list">
+                    <div class="nav-hang">
+                        <span>购买用品</span>
+                        <div class="cl-a9b">
+                            <span>曹雨虹</span>
+                            <span>警保处</span>
+                        </div>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="#"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group list">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+
+</html>
+
+<script type="text/javascript" src="../js/common.js"></script>

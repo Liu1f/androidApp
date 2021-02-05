@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>培训费报销</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/data.css">
+    <link rel="stylesheet" href="../css/zui.css">
+    <link href="../css/common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+<!--    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="../js/rem.js"></script>
+<!--    <script src="../js/jquery.rotate.min.js"></script>-->
+    <style>
+        .container {
+            width: 100%;
+            background: #efefef;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .item {
+            position: relative;
+            width: 100%;
+            height: 1.2rem;
+            overflow: hidden;
+            background: #fff;
+        }
+        .item .content {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1.2rem;
+            padding-left: 20px;
+            line-height: 50px;
+            z-index: 1;
+            box-sizing: border-box;
+            background: #fff;
+            border-bottom: 1px solid rgba(153, 153, 153, 0.192);
+            transition: all .5s ease;
+            display: flex;
+            align-items: center;
+        }
+        .item .button-group {
+            position: absolute;
+            right: 0;
+            z-index: 0;
+        }
+        .item .button-group .del-btn {
+            height: 1.2rem;
+            width: 60px;
+            border: 0;
+            color: #fff;
+            background: #da3d3d;
+            border: 1px solid #fff;
+
+        }
+        .item.active .content {
+            left: -60px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="box">
+    <div class="apply">
+        <div class="h-70">
+            <a href="./details.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+            <span class="ft-35">培训费报销</span>
+            <span></span>
+        </div>
+        <div class="apply-first">
+            <div class="h-120">
+                <span>报销单号</span>
+                <input type="text" value="CLF20190514001">
+                <span></span>
+            </div>
+            <div class="h-120">
+                <span>报销名称</span>
+                <input type="text" value="CLF20190514001">
+                <span></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>报销部门</span>
+                <span class="wd-30"></span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>警保处</div>
+                        <div>采购部</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>报&nbsp;销&nbsp;人</span>
+                <span class="wd-30"></span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>曹雨虹</div>
+                        <div>张楠</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120 tanchuang yin">
+                <span>申&nbsp;请&nbsp;单</span>
+                <span class="wd-30"></span>
+                <div class="ab">
+                    <div class="nav">
+                        <div name="申请1">申请1(曹雨虹)20200101</div>
+                        <div name="申请2">申请2(曹雨虹)20200201</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120 tanchuang yin">
+                <span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+                <span class="wd-30"></span>
+                <div class="ab">
+                    <div class="nav">
+                        <div name="信息化采购项目1">信息化采购项目1(部门专项职责履行项目)</div>
+                        <div name="信息化采购项目2">信息化采购项目2(部门专项职责履行项目)</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120">
+                <span>培训名称</span>
+                <input type="text" value="">
+                <span></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>培训类别</span>
+                <span class="wd-30">区内培训</span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>区内培训</div>
+                        <div>区外培训</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>主办部门</span>
+                <span class="wd-30">警保处</span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>警保处</div>
+                        <div>采购处</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>负责人</span>
+                <span class="wd-30">曹雨虹</span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>曹雨虹</div>
+                        <div>张楠</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <!--
+          <div class="h-120 tanchuang">
+                <span>工作人员</span>
+                <span class="wd-30">工作人员</span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>选择图片</div>
+                        <div>连续扫码</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            -->
+            <div class="h-120">
+                <span>工作人员</span>
+                <input type="text" value="0">
+                <span></span>
+            </div>
+            <div class="h-120">
+                <span>参加人数</span>
+                <input type="text" value="0">
+                <span></span>
+            </div>
+            <div class="h-120">
+                <span>培训场地</span>
+                <input type="text" value="0">
+                <span></span>
+            </div>
+            <div class="h-120 tanchuang">
+                <span>是否定点</span>
+                <span class="wd-30">是</span>
+                <div class="ab">
+                    <div class="nav">
+                        <div>是</div>
+                        <div>否</div>
+                        <p class="quxiao">取消</p>
+                    </div>
+                </div>
+                <span class="iconfont icon-z043"></span>
+            </div>
+            <div class="h-120">
+                <span>非定点说明</span>
+                <input type="text" value="0">
+                <span></span>
+            </div>
+        </div>
+        <div class="wd-100 bd-ef pd-20">
+            <div class="father">
+                <div class="add-img">
+                    <img src="../img/jiahao.png" class="cun" id="cun">
+                </div>
+            </div>
+            <div class="ab1" id="ab1">
+                <div class="nav1" id="nav1">
+                    <div class="tu">
+                        <span>选择图片</span>
+                        <section class="z_file fl">
+                            <input type="file" name="file" id="file" class="file" value=""
+                                   accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+                        </section>
+                    </div>
+                    <div class="pai">
+                        <span>拍照</span>
+                        <input type="file" capture="camera" accept="image/*">
+                    </div>
+                    <div class="pai">
+                        <span>扫码</span>
+                        <input type="file" capture="camera" accept="image/*">
+                    </div>
+                    <div class="pai">
+                        <span>连续扫码</span>
+                        <input type="file" capture="camera" accept="image/*">
+                    </div>
+                    <p class="quxiao">取消</p>
+                </div>
+            </div>
+        </div>
+        <div class="mt-20 h-80 center mb-20">
+            <span class="mb-10 cs-pt cl-e65">添加相关附件</span>
+        </div>
+
+        <div class="apply-third">
+            <div class="container">
+                <div class="item" data-status='0'>
+                    <div class="content">
+                        <div class="apply-third-div">
+                            <span class="wd-60">会议室</span>
+                            <span class="cl-e0d">￥240</span>
+                        </div>
+                        <div class="apply-third-div">
+                            <span class="ta-lt cl-afa">100<span class="cl-afa-span">(标准金额)</span></span>
+                            <span class="cl-afa">120<span class="cl-afa-span">(单价)</span></span>
+                            <span class="cl-afa">2<span class="cl-afa-span">(数量)</span></span>
+                            <span class="ta-rt cl-afa">240<span class="cl-afa-span">(总金额)</span></span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="del-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cl-e65 cs-pt baoxiaodetail apply-third-last" id="baoxiaodetail">
+                <span>报销明细</span>
+                <div class="none">
+                    <div class="fixed fixed1" id="fixed1">
+                        <div class="lvcheng yin">
+                            <div>
+                                <span>支出事项</span>
+                                <span class="sp-ct"></span>
+                                <div class="hc">
+                                    <div class="fangshi">
+                                        <p>
+                                            <span class="fangshi-quxiao">取消</span>
+                                            <span class="cl-cf7 fangshi-queren">确定</span>
+                                        </p>
+                                        <div name="资料费" type="一类培训" biaozhun="50" info="平均每人不得超越">一类培训资料费(人均50)</div>
+                                        <div name="资料费" type="二类培训" biaozhun="80" info="平均每人不得超越">二类培训资料费(人均80)</div>
+                                        <div name="资料费" type="三类培训" biaozhun="100" info="平均每人不得超越">三类培训资料费(人均100)</div>
+                                        <div name="会议室使用费" type="区内培训" biaozhun="5000" info="半天">区内培训会议室使用费(半天5000)</div>
+                                        <div name="会议室使用费" type="区外培训" biaozhun="8000" info="半天">区外培训会议室使用费(半天8000)</div>
+                                    </div>
+                                </div>
+                                <span class="iconfont icon-z043 wd-10 cc-fangshi"></span>
+                            </div>
+                            <div>
+                                <span>标准</span>
+                                <input type="text" placeholder="1200">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>单价</span>
+                                <input type="text" placeholder="1000">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>数量</span>
+                                <input type="text" placeholder="1">
+                                <span></span>
+                            </div>
+                            <div class="shijian1">
+                                <span>日期</span>
+                                <input readonly class="form-control" type="text" id="date-group1-1" placeholder="">
+                                <span class="iconfont icon-z043 wd-10"></span>
+                            </div>
+                            <div>
+                                <span>第三方单位</span>
+                                <input type="text" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>电子票据</span>
+                                <input type="text" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span class="wd-30 lvcheng-quxiao">确认</span>
+                                <div></div>
+                                <span class="wd-30 lvcheng-quxiao">取消</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apply-sixth">
+<!--            <div class="container">-->
+<!--                <div class="item" data-status='0'>-->
+<!--                    <div class="content">-->
+<!--                        <div class="apply-sixth-div1">报销说明</div>-->
+<!--                        <div class="apply-sixth-div2">部分报销不符合规定，请撤回报销单，重新报销，请随时留意系统内报销流程！！！</div>-->
+<!--                    </div>-->
+<!--                    <div class="button-group">-->
+<!--                        <button class="del-btn">删除</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="cl-e65 cs-pt baoxiaoinfo apply-sixth-last" id="baoxiaoinfo">
+                <span>报销说明</span>
+                <div class="none">
+                    <div class="fixed fixed2" id="fixed2">
+                        <div class="lvcheng">
+                            <div>
+                                <span>备注</span>
+                                <input type="text" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span class="wd-30 baoxiaoinfo-queren" id="baoxiaoinfo-queren">确认</span>
+                                <div></div>
+                                <span class="wd-30 lvcheng-quxiao">取消</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apply-fifth">
+            <!--
+            <div class="container">
+                <div class="item" data-status='0'>
+                    <div class="content">
+                        <div class="apply-fifth-div">
+                            <div>
+                                <span class="wd-50">收款人(公务卡)</span>
+                                <span class="wd-50 cl-e0d jt-end">￥240</span>
+                            </div>
+                            <div>
+                                <span class="wd-30 cl-afa">亚运村支行</span>
+                                <span class="wd-70 cl-afa jt-end">222222222222222222222</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="del-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+            -->
+            <div class="cs-pt cl-e65 zhifuxinxi" id="zhifuxinxi">
+                <span>支付信息</span>
+                <div class="none">
+                    <div class="fixed fixed3" id="fixed3">
+                        <div class="lvcheng">
+                            <div>
+                                <span>收款人</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>开户行</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>支付方式</span>
+                                <span class="sp-ct">公务卡</span>
+                                <div class="hc">
+                                    <div class="fangshi">
+                                        <p>
+                                            <span class="fangshi-quxiao">取消</span>
+                                            <span class="cl-cf7 fangshi-queren">确定</span>
+                                        </p>
+                                        <div>公务卡</div>
+                                        <div>银行卡</div>
+                                    </div>
+                                </div>
+                                <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                            </div>
+                            <div>
+                                <span>账号</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>金额</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span class="wd-30 zhifuxinxi-queren" id="zhifuxinxi-queren">确认</span>
+                                <span class="wd-30">确认继续</span>
+                                <span class="wd-30 lvcheng-quxiao">取消</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apply-fourth">
+        <!--
+            <div class="container">
+                <div class="item" data-status='0'>
+                    <div class="content">
+                        <div class="apply-fourth-div">
+                            <div>
+                                <span class="wd-50">指挥中心(办工经费)</span>
+                                <span class="wd-20 jt-end cl-e0d">￥1000</span>
+                            </div>
+                            <div>
+                                <span class="wd-30 cl-afa">2020<span class="cl-afa-span">(年)</span></span>
+                                <span class="wd-30 cl-afa">8000<span class="cl-afa-span">(总额)</span></span>
+                                <span class="wd-40 cl-afa">1200<span class="cl-afa-span">(预算余额)</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="del-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+            -->
+            <div class="cs-pt cl-e65 zhibiao" id="zhibiao">
+                <span>添加指标</span>
+                <div class="none">
+                    <div class="fixed fixed4" id="fixed4">
+                        <div class="lvcheng">
+                            <div class="zhibiaoinfo">
+                                <span>支出指标</span>
+                                <span class="sp-ct" year="2020" guikou="指挥中心" xiangmu="办公经费" money="4000" yue="3000"></span>
+                                <div class="hc">
+                                    <div class="fangshi">
+                                        <p>
+                                            <span class="fangshi-quxiao">取消</span>
+                                            <span class="cl-cf7 fangshi-queren">确定</span>
+                                        </p>
+                                        <div year="2020" guikou="指挥中心" xiangmu="办公经费" money="2000" yue="1000">2020指挥中心办公经费2000元</div>
+                                        <div  year="2020" guikou="指挥中心" xiangmu="办公经费" money="4000" yue="3000">2020指挥中心办公经费4000元</div>
+                                    </div>
+                                </div>
+                                <span class="iconfont icon-z043 wd-10  cc-fangshi"></span>
+                            </div>
+                            <div>
+                                <span>支出金额</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>支出项</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span>备注</span>
+                                <input type="text" class="wd-50" placeholder="">
+                                <span></span>
+                            </div>
+                            <div>
+                                <span class="wd-30 zhibiao-queren" id="zhibiao-queren">确认</span>
+                                <span class="wd-30">确认继续</span>
+                                <span class="wd-30 lvcheng-quxiao">取消</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apply-footer">
+            <div>
+                <span class="cl-afa">合计：</span>
+                <span class="cl-afa">0元</span>
+            </div>
+            <div>
+                <a href="#"  onClick="toSave(this,'PV');">保存</a>
+            </div>
+            <div>
+                <a href="#" onClick="toSave(this,'PV');">保存审批</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+<!--<script src="../js/zui.js"></script>-->
+<!--<script src="../js/imgUp.js"></script>-->
+<script type="text/javascript" src="../js/rolldate.min.js"></script>
+<script type="text/javascript">
+    // 时间选择器
+    window.onload = function () {
+
+        // 格式
+        new Rolldate({
+            el: '#date-group1-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        /* 回调函数
+         * tips:	在vue及其他mvvm框架中使用时，在confirm中修改v-model绑定的数据即可
+         */
+        new Rolldate({
+            el: '#date-group2-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                console.log('插件开始触发');
+            },
+            moveEnd: function (scroll) {
+                console.log(scroll)
+                console.log('滚动结束');
+            },
+            confirm: function (date) {
+                console.log(date)
+                console.log('确定按钮触发');
+            },
+            cancel: function () {
+                console.log('插件运行取消');
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-2',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                if (1 == 1) {
+                    console.log('阻止插件继续执行');
+                    return false;
+                }
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-3',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                return date.replace(/-/g, '/');
+            }
+        })
+        // 自定义语言
+        var lang = {
+            title: '自定义标题',
+            cancel: '取消',
+            confirm: '确认',
+            year: '年',
+            month: '月',
+            day: '日',
+            hour: '时',
+            min: '分',
+            sec: '秒'
+        };
+        // 如果某个值未修改可不传 以上同 var lang = {title:'自定义标题'} 允许传空串
+        new Rolldate({
+            el: '#date-group3-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            lang: lang
+        })
+
+        // 设置默认日期 内部使用document.getElementById('date').bindDate = new Date('2019/05/13');
+        new Rolldate({
+            el: '#date-group4-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            value: '2017-10-21' //或2017-10-21 23:52:50
+        })
+
+        // el传dom对象，只支持单个
+        new Rolldate({
+            el: document.getElementById('date-group5-1'),
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+
+        // 分钟按指定数分隔
+        new Rolldate({
+            el: '#date-group6-1',
+            format: 'hh:mm',
+            minStep: 5
+        })
+        // 使用原生click
+        new Rolldate({
+            el: '#date-group7-1',
+            trigger: 'click'
+        })
+
+        // 其他示例
+        //日期判断
+        new Rolldate({
+            el: '#date-group8-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                var d = new Date(),
+                    d1 = new Date(date.replace(/\-/g, "\/")),
+                    d2 = new Date(d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate()); //如果非'YYYY-MM-DD'格式，需要另做调整
+
+                if (d1 < d2) {
+                    alert('不能小于当前的日期');
+                    return false;
+                }
+            }
+        })
+
+        //存在取消按钮弹窗
+        var tanchuanClass = document.getElementsByClassName("tanchuang");//弹框展示
+        for ( var i = 0; i < tanchuanClass.length; i++) {
+            tanchuanClass[i].index = i;
+            tanchuanClass[i].onclick = function ()
+            {
+                this.lastElementChild.previousElementSibling.style.display="block";
+                this.lastElementChild.previousElementSibling.firstElementChild.style.display="block";
+            }
+        }
+        var quxiaoClass = document.getElementsByClassName("quxiao");//点击取消
+        for ( var i = 0; i < quxiaoClass.length; i++) {
+            quxiaoClass[i].index = i;
+            quxiaoClass[i].onclick = function (e)
+            {
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.style.display="none";
+                this.parentElement.parentElement.style.display="none";
+            }
+        }
+        var divText = document.querySelectorAll(".nav div");//方式转换
+        for ( var i = 0; i < divText.length; i++) {
+            divText[i].index = i;
+            divText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.textContent;
+                this.parentElement.style.display="none";
+                this.parentElement.parentElement.style.display="none";
+            }
+        }
+        var abClass = document.getElementsByClassName("ab");//点击阴影
+        for ( var i = 0; i < abClass.length; i++) {
+            abClass[i].index = i;
+            abClass[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.style.display="none";
+                this.firstElementChild.style.display="none";
+            }
+        }
+        //存在确认和取消按钮的相关弹窗
+        var twoButton = document.querySelectorAll(".sp-ct,.cc-fangshi");//弹框展示
+        for ( var i = 0; i < twoButton.length; i++) {
+            twoButton[i].index = i;
+            twoButton[i].onclick = function (e){
+                this.nextElementSibling.style.display="block";
+                this.nextElementSibling.firstElementChild.style.display="block";
+            }
+        }
+        var fangshiText = document.querySelectorAll(".fangshi>div");//方式转换
+        for ( var i = 0; i < fangshiText.length; i++) {
+            fangshiText[i].index = i;
+            fangshiText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.textContent;
+                for ( var i = 0; i < fangshiText.length; i++) {
+                    fangshiText[i].style.backgroundColor = "#fff";
+                }
+                this.style.backgroundColor = "#efefef";
+            }
+        }
+        var divYinText = document.querySelectorAll(".yin .fangshi>div");//方式转换
+        for ( var i = 0; i < divYinText.length; i++) {
+            divYinText[i].index = i;
+            divYinText[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.previousElementSibling.textContent=this.getAttribute("name");
+                for ( var i = 0; i < fangshiText.length; i++) {
+                    fangshiText[i].style.backgroundColor = "#fff";
+                }
+                this.style.backgroundColor = "#efefef";
+                // e.cancelBubble = true;
+                // e.stopPropagation();
+                // this.parentElement.parentElement.previousElementSibling.textContent=this.getAttribute("name");
+                // this.parentElement.style.display="none";
+                // this.parentElement.parentElement.style.display="none";
+            }
+        }
+        var querenButton = document.querySelectorAll(".fangshi-queren,.fangshi-quxiao");//点击确认和取消
+        for ( var i = 0; i < querenButton.length; i++) {
+            querenButton[i].index = i;
+            querenButton[i].onclick = function (e){
+                this.parentElement.parentElement.style.display="none";
+                this.parentElement.parentElement.parentElement.style.display="none";
+            }
+        }
+        var hcClass = document.getElementsByClassName("hc"); //点击阴影部分
+        for ( var i = 0; i < hcClass.length; i++) {
+            hcClass[i].index = i;
+            hcClass[i].onclick = function (e){
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.style.display="none";
+                this.firstElementChild.style.display="none";
+            }
+        }
+
+        document.getElementById("baoxiaodetail").onclick=function () { //报销明细
+            document.getElementById("fixed1").style.display = "block";
+        }
+        document.getElementById("baoxiaoinfo").onclick=function () { //报销说明
+            document.getElementById("fixed2").style.display = "block";
+        }
+        document.getElementById("baoxiaoinfo-queren").onclick=function(e){
+            var baoxiaoinfo = document.getElementById("fixed2").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-sixth-div1\">报销说明</div>" +
+                "<div class=\"apply-sixth-div2\">"+baoxiaoinfo[0].firstElementChild.nextElementSibling.value +
+                "</div></div><div class=\"button-group\">" +
+                "<button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("baoxiaoinfo");
+            var containers = parent.parentElement.getElementsByClassName("container");
+            for (var i = 0;i < containers.length;i++) {
+                containers[i].remove();
+            }
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加支付信息
+        document.getElementById("zhifuxinxi").onclick=function () {
+            document.getElementById("fixed3").style.display = "block";
+        }
+        document.getElementById("zhifuxinxi-queren").onclick=function(e){
+            var zhifuxinxiinfo = document.getElementById("fixed3").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML="<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-fifth-div\"><div><span class=\"wd-50\">" +
+                zhifuxinxiinfo[0].firstElementChild.nextElementSibling.value+
+                "("+zhifuxinxiinfo[2].firstElementChild.nextElementSibling.textContent+")" +
+                "</span><span class=\"wd-50 cl-e0d jt-end\">￥"+
+                zhifuxinxiinfo[4].firstElementChild.nextElementSibling.value+
+                "</span></div><div><span class=\"ta-lt cl-afa\">"+
+                zhifuxinxiinfo[1].firstElementChild.nextElementSibling.value+"</span>" +
+                "<span class=\"cl-afa jt-end\">"+zhifuxinxiinfo[3].firstElementChild.nextElementSibling.value+"</span>" +
+                "</div></div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button>" +
+                "</div></div>";
+            var parent = document.getElementById("zhifuxinxi");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+        //添加指标
+        document.getElementById("zhibiao").onclick=function () {
+            document.getElementById("fixed4").style.display = "block";
+        }
+        document.getElementById("zhibiao-queren").onclick=function(e){
+            var zhibiaoinfo = document.getElementById("fixed4").firstElementChild.children;
+            var newContainer = document.createElement("div");
+            newContainer.classList.add('container');
+            newContainer.innerHTML = "<div class=\"item\" data-status='0'><div class=\"content\">" +
+                "<div class=\"apply-fourth-div\"><div><span class=\"wd-50\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("guikou")+"(" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("xiangmu")+")" +
+                "</span><span class=\"wd-20 jt-end cl-e0d\">￥" +
+                zhibiaoinfo[1].firstElementChild.nextElementSibling.value+"</span></div><div><span class=\"wd-30 ta-lt cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("year")+"<span class=\"cl-afa-span\">(年)</span></span>" +
+                "<span class=\"wd-30 cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("money")+"<span class=\"cl-afa-span\">" +
+                "(总额)</span></span><span class=\"wd-40 cl-afa\">" +
+                zhibiaoinfo[0].firstElementChild.nextElementSibling.getAttribute("yue")+
+                "<span class=\"cl-afa-span\">(预算余额)</span></span></div></div></div>" +
+                "<div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+            var parent = document.getElementById("zhibiao");
+            parent.parentNode.insertBefore(newContainer,parent)
+            e.cancelBubble = true;
+            e.stopPropagation();
+            this.parentElement.parentElement.parentElement.style.display="none";
+        }
+
+        var lvchengquxiaoClass = document.getElementsByClassName("lvcheng-quxiao");//点击取消
+        for ( var i = 0; i < lvchengquxiaoClass.length; i++) {
+            lvchengquxiaoClass[i].index = i;
+            lvchengquxiaoClass[i].onclick = function (e)
+            {
+                e.cancelBubble = true;
+                e.stopPropagation();
+                this.parentElement.parentElement.parentElement.style.display="none";
+            }
+        }
+
+        document.getElementById("cun").onclick=function () { //添加指标
+            document.getElementById("ab1").style.display="block";
+            document.getElementById("nav1").style.display="block";
+        }
+        document.getElementById("ab1").onclick=function () { //添加指标
+            document.getElementById("ab1").style.display="none";
+            document.getElementById("nav1").style.display="none";
+        }
+
+        // 滑块
+        const items = document.querySelectorAll('.item')
+        items.forEach(item => {
+            let touchStart, touchEnd
+            // 滑动开始, 记录开始位置
+            item.addEventListener('touchstart', function (e) {
+                touchStart = e.touches[0].clientX
+            })
+            // 滑动结束
+            item.addEventListener('touchend', function (e) {
+                let currentEle = e.currentTarget
+                touchEnd = e.changedTouches[0].clientX
+                // 向左滑, 显示删除按钮
+                if (currentEle.dataset.status === '0' && touchEnd - touchStart < -30) {
+                    currentEle.dataset.status = 1
+                    currentEle.classList.add('active')
+                    $('body').click(function (e) {
+                        console.log(e)
+                        e.stopPropagation()
+                        if (e.target.className == "del-btn") {
+
+                        } else {
+                            currentEle.dataset.status = 0
+                            currentEle.classList.remove('active')
+                        }
+                    })
+                }
+                // 向右滑, 隐藏删除按钮
+                if (currentEle.dataset.status === '1' && touchEnd - touchStart > 30) {
+                    currentEle.dataset.status = 0
+                    currentEle.classList.remove('active')
+                }
+            })
+        })
+        const btns = document.querySelectorAll('.del-btn')
+        btns.forEach(btn => {
+            // 删除按钮点击事件
+            btn.addEventListener('click', function (e) {
+                btn.parentElement.parentElement.remove()
+            })
+        })
+    }
+</script>

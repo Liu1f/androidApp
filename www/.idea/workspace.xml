@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="1c3f06cd-ecd8-481f-b179-a75b7e5639b9" name="Default" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1eLdLTCjWseeH5aVo5VIKb2du9J" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="FullScreen" value="false" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../飞羽内控/页面" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\ideaproject\www\img" />
+      <recent name="D:\ideaproject\www\oa" />
+      <recent name="D:\ideaproject\www\payApply" />
+      <recent name="D:\ideaproject\www\js" />
+      <recent name="D:\ideaproject\www\payExpense" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <method />
+    </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <method />
+    </configuration>
+    <configuration default="true" type="JsTestDriver-test-runner" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="Chrome" />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\wyq\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1c3f06cd-ecd8-481f-b179-a75b7e5639b9" name="Default" comment="" />
+      <created>1510831136931</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1510831136931</updated>
+      <workItem from="1594104778881" duration="3000" />
+      <workItem from="1597041267087" duration="9000" />
+      <workItem from="1599187775584" duration="24584000" />
+      <workItem from="1599449483089" duration="23158000" />
+      <workItem from="1599526438731" duration="32596000" />
+      <workItem from="1599612908259" duration="31673000" />
+      <workItem from="1599699172452" duration="35106000" />
+      <workItem from="1599785772469" duration="32693000" />
+      <workItem from="1600045140152" duration="33032000" />
+      <workItem from="1600131669428" duration="32853000" />
+      <workItem from="1600217450222" duration="70000" />
+      <workItem from="1600217618843" duration="33122000" />
+      <workItem from="1600304155747" duration="20150000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1599815477967">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1599815477967" />
+    <state x="371" y="87" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1600313896063">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="371" y="87" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1280.680@0.0.1280.680" timestamp="1600313896063" />
+    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1600328177393">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1600328177393" />
+    <state x="204" y="-5" width="605" height="584" key="find.popup" timestamp="1600252633269">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="204" y="-5" width="605" height="584" key="find.popup/0.0.1280.680@0.0.1280.680" timestamp="1600252633269" />
+    <state x="204" y="-5" width="605" height="584" key="find.popup/0.0.1280.689@0.0.1280.689" timestamp="1599216243836" />
+    <state x="297" y="151" key="run.anything.popup" timestamp="1599624940246">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="297" y="151" key="run.anything.popup/0.0.1280.680@0.0.1280.680" timestamp="1599624940246" />
+    <state x="347" y="9" width="672" height="670" key="search.everywhere.popup" timestamp="1600248831057">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="347" y="9" width="672" height="670" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1600248831057" />
+    <state x="347" y="9" width="672" height="678" key="search.everywhere.popup/0.0.1280.689@0.0.1280.689" timestamp="1599214960295" />
+  </component>
+</project>

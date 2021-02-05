@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>差旅费报销展示</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/data.css">
+    <link rel="stylesheet" href="../css/zui.css">
+    <link href="../css/common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+<!--    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>-->
+<!--    <script src="../js/jquery.rotate.min.js"></script>-->
+
+    <script src="../js/rem.js"></script>
+    <script type="text/javascript" src="../js/rolldate.min.js"></script>
+
+    <script src="../js/flyformdatapageapp.js"></script>
+    <script src="../js/flyshowpageapp.js"></script>
+    <script src="../js/pubToolsapp.js"></script>
+    <script src="../js/pubUtilapp.js"></script>
+    <script src="../js/flycommonselectapp.js"></script>
+    <script src="../js/flyapp.js"></script>
+    <script type="text/javascript" src="../js/ajaxPubapp.js"></script>
+
+    <script type="text/javascript">
+
+        var appKey_a = "";
+
+        //是否可以作废。
+        var flyshowpageIsVoid_a = true;
+        function flyshowpageIsVoid(){
+            return flyshowpageIsVoid_a;
+        }
+
+
+        //实现flyshowpage接口，点击编辑按钮操作，导向编辑页面，dataKey通用程序已编码。
+        function toEditPage(flag){
+
+            //alert(flyShowPageGetDataKey()+" ; "+flyShowPageGetAuth());
+
+            var detailKey = window.encodeURI(flyShowPageGetDataKey());
+
+            window.location.href="travelExpenseEdit.html?dataKey="+detailKey+"&authFlag="+flyShowPageGetAuth()+"&flag="+flag+"&progId="+flyShowPageGetProgId();
+        }
+        //导向报销信息编辑页面。
+        function toExpense(){
+
+            var detailKey = window.encodeURI(window.encodeURI(flyShowPageGetDataKey()+"|"+flyShowPageGetAppName()));
+            window.location.href="/fwis/mssl/travelExpenseEditPage?flag=Add&passBill=Y&dataKey="+detailKey+"&authFlag=E&progId=travelExpensePage";
+        }
+        //鼠标点击页面空白处，隐藏弹出功能
+        function mouseDownBlank(event){
+
+            flyPopBarMouseDown(event);
+            flyPopAttchMouseDown(event);
+
+            return;
+        }
+        /**
+         * 后台服务器操作接口。
+         * 1、确定servlet地址即可
+         * 2、后台取值两个，flag、opValue。
+         * 3、根据flag判断，拆串opValue，进行处理
+         * @param flag     操作标识
+         * @param opValue  处理的值，一般为拼串。到后台要拆串
+         * @return 处理结果值。正确返回相应值或标识，错误返回错误标识，由前台提示
+         */
+        function toServerOp(flag,opValue){
+
+            var info = "opValue="+opValue;
+            var result = getHttpResponse("/fwis/mssl/payTraveExpenseSrv",flag,info);
+
+            if(!result || result.length<10)
+                return result;
+
+            if(flag=="ShowData"){//取得审批键值
+
+                var i = result.indexOf("|");
+                var f = result.indexOf("|",i+1)
+
+                appKey_a = result.substring(0,f);
+                result = result.substring(f+1);
+            }
+
+            return result;
+        }
+
+        /**
+         * 实现flyshowpage接口。在解析取得传递参数后、在显示按钮和信息前，做操作。
+
+         * @ dataKey   已解码键值：单位代码^单据号^审批单号^审批状态^单据状态
+         * @ return
+         */
+        function flyShowPagePreSet(dataKey){
+
+            var arr = dataKey.split("^");
+
+            flyShowPageSetApp([arr[3],arr[4]]);	//显示审批状态下的按钮。
+
+            flyShowPageSetPrint("Y");
+
+            if(arr[3]!="Y" || arr[4]!="Y" || arr[8]=="Y")
+                flyshowpageIsVoid_a = false;//不可作废
+
+        }
+
+        /**
+         * 实现flyshowpage接口。在显示页面发起审批时，实现该方法：
+         1、取得审批名称，即发起功能的事项名称、合同名称等；
+
+         * @ return 页面事项名称、合同名称等；
+         */
+        function flyShowPageGetAppName(){
+
+            return document.getElementById('nameId').innerHTML;
+        }
+
+        //设置报销按钮
+        function setExpButton(){
+
+            var dateKey = flyShowPageGetDataKey();
+
+            var arr = dateKey.split("^");
+
+            if(arr[3]=="Y" && arr[4]=="Y" && arr[8]!="Y"){
+
+                var expUrl = "<a href='javascript:toExpense();'>报销</a>";
+                var urlStr = document.getElementById('opButtons').innerHTML;
+
+                document.getElementById('opButtons').innerHTML = expUrl+urlStr;
+            }
+        }
+        function init(){
+
+            //初始化页面参数
+            flyShowPageSetAuth();
+
+            flyShowPageShow();
+
+            var payTableNone = document.getElementById("payTableId").querySelectorAll(".container");
+            payTableNone[payTableNone.length-1].style.display = "none";
+
+
+            // wfProgressBarInit(appKey_a);
+            //附件图片显示
+            // flyShowPageAttchImg("attchFiles","flyShowPageImgLayerId","flyShowPageImgTitleLayerId");
+
+            // if(flyShowPageGetAuth()=="E")
+            //     setExpButton();//设置报销按钮
+
+        }
+    </script>
+</head>
+
+<body  onLoad="init()">
+    <div class="box">
+        <div id="editForm" class="apply">
+            <div class="h-70">
+                <a href="../mainpage.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+                <span class="ft-35">差旅费报销</span>
+                <span></span>
+            </div>
+
+            <div class="apply-first">
+                <div class="h-120">
+                    <span>报销单号</span>
+                    <span id="billId" flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>报销名称</span>
+                    <span id="nameId" flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>报销部门</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+
+                <div class="h-120">
+                    <span>报&nbsp;销&nbsp;人</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>申&nbsp;请&nbsp;单</span>
+                    <span id="appCodeTdId"  flyflag="4"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>申请金额</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120"  style="display: none">
+                    <span>报销总计</span>
+                    <span id="appAmtId" flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120" style="display: none">
+                    <span>公&nbsp;务&nbsp;卡</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120" style="display: none">
+                    <span>个人转账</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120" style="display: none">
+                    <span>第三方转账</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+
+
+                <span flyflag="2" style="display: none"></span>
+                <span flyflag="0" style="display: none"></span>
+
+                <div class="h-120">
+                    <span>事&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>出差类别</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>出差情况</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>出差地点</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>用餐情况</span>
+                    <span flyflag="2"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>开始时间</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>结束时间</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>出差人员</span>
+                    <span flyflag="4"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>出差人数</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>差旅公司</span>
+                    <span flyflag="4"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>单据状态</span>
+                    <span  id="billStatusId" flyflag="0"></span>
+                    <span></span>
+                </div>
+
+                <div class="h-120">
+                    <span>录入人</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>录入时间</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+                <span flyflag="0" style="display: none"></span>
+                <div class="h-120">
+                    <span>备注</span>
+                    <span flyflag="0"></span>
+                    <span></span>
+                </div>
+
+<!--                <input id="attchFiles" class="attch_files_span" type="text" flyflag="4" readonly style="display: none">-->
+
+                <div class="details-img">
+                    <div class="quanzi-one">
+                        <div class="baguetteBoxOne gallery">
+                            <a href="../img/function_icon_d10.png" data-caption="1"><img src="../img/function_icon_d10.png"></a>
+                            <a href="../img/function_icon_d10.png" data-caption="2"><img src="../img/function_icon_d10.png"></a>
+                            <a href="../img/function_icon_d10.png" data-caption="3"><img src="../img/function_icon_d10.png"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--指标区域-->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="indexTable" class="apply-fourth apply-space" flyflag='18'  flyset="6|0,2|3|0,1|1|2">
+
+                <div class="container"  style="display:none" >
+                    <div class="item" data-status="0">
+                        <div class="content" flyshow='9' flyflag='9' flyvalue="" onclick="windowShowDataInfo(this,0)">
+                            <div class="apply-fourth-div"><div>
+                                <span class="wd-50" flyshow='0'></span>
+                                <span class="wd-20 jt-end cl-e0d">￥<span flyshow='0'>500</span></span>
+                            </div>
+                                <div>
+                                    <span class="wd-10 ta-lt cl-0089D0" ><span  flyshow='0'>2020</span><span class="cl-afa-span">(年)</span></span>
+                                    <span class="wd-60 cl-0089D0" ><span flyshow='0'>2000</span><span class="cl-afa-span">(总额)</span></span>
+                                    <span class="wd-60 cl-0089D0"><span flyshow='0'>1000</span><span class="cl-afa-span">(余额)</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cs-pt cl-e65 zhibiao" id="indicationInfo">
+                    <span>指标预算</span>
+                    <div class="none">
+                        <div class="fixed fixed6" id="fixed-4">
+                            <div class="lvcheng">
+                                <div class="zhibiaoinfo">
+                                    <span>支出指标</span>
+                                    <input type="text" flyvalue="" class="wd-60"  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>指标金额</span>
+                                    <input id="indic_amt" type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>指标余额</span>
+                                    <input id="indic_balance" type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支出金额</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>对应支出项</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--行程区域-->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="travelTableId" class="apply-second  apply-space"  flyflag='18'  flyset="10|3,1|5,1|4,1|6|1|2">
+                <div class="container"  style="display:none;">
+                    <div class="item" data-status="0">
+                        <div class="content" flyshow="9" flyflag="9" flyvalue=""  onclick="windowShowDataInfo(this,1)">
+                            <div class="apply-second-hua">
+                                <span flyshow='0'>北京</span>
+                                <span class="xuxian"><span flyshow='0'>火车</span><i></i></span>
+                                <span flyshow='0'>邯郸</span>
+                                <span class="wd-20 ta-rt cl-e0d">￥<span  flyshow='0'>200</span></span>
+                            </div>
+                            <div class="apply-second-hua">
+                                <span class="cl-afa"  flyshow='0'>2020-10-16</span>
+                                <span></span>
+                                <span class="cl-afa"  flyshow='0'>2020-10-16</span>
+                                <span class="wd-10"></span>
+                            </div>
+                        </div>
+                        <div class="button-group"><button class="del-btn" onclick="itemDelete(this)">删除</button></div>
+                    </div>
+                </div>
+
+                <div class="cs-pt cl-e65 addlvcheng" id="travelInfo">
+                    <span>行程</span>
+                    <div class="none">
+                        <div class="fixed fixed2" id="fixed2">
+                            <div class="lvcheng">
+                                <div class="shijian1">
+                                    <span>出发时间</span>
+                                    <input type="text" id="date-group1-3" class="wd-60"   readonly>
+                                    <span></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>到达时间</span>
+                                    <input type="text" id="date-group1-4" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+
+                                <div>
+                                    <span>出发地点</span>
+                                    <input type="text" class="wd-50" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>到达地点</span>
+                                    <input type="text" class="wd-50" flyvalue=""  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通方式</span>
+                                    <input type="text" class="wd-50" flyvalue="" readonly>
+
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通费</span>
+                                    <input type="text" class="wd-60" readonly >
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支付类别</span>
+                                    <input type="text" class="wd-50" flyvalue="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注(车牌号)</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>电子票据</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 城市间交通 -->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="cityId" class="apply-second  apply-space"  flyflag='18'  flyset="11|1,3|2,1|8|5,1|7,1|6,1|4">
+
+                <div class="container" style="display: none">
+                    <div class="item" data-status="0">
+                        <div class="content" flyshow="9" flyflag='9' flyvalue='' onclick="windowShowDataInfo(this,1)">
+                            <div class="apply-second-hua">
+                                <span class="wd-50"><span flyshow="0">曹雨虹</span>(<span flyshow="0">科级</span>)</span>
+                                <span class="wd-15 ta-rt cl-e0d">￥<span flyshow="0">23465</span></span>
+                            </div>
+                            <div class="apply-second-hua">
+                                <span class="cl-afa" flyshow="0">
+                                    邯郸
+                                </span>
+                                <span class="ta-ct xuxian cl-afa xuxian-cl-afa">
+                                    <span flyshow="0">火车</span>
+                                    <i class="cl-afa"></i>
+                                </span>
+                                <span class="ta-ct cl-afa" flyshow="0">北京</span>
+                                <span class="wd-25 cl-afa" flyshow="0">2020-09-18</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn" onclick="itemDelete(this)">删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cl-e65 cs-pt chengjian" id="city" >
+                    <span>城间交通</span>
+                    <div class="none">
+                        <div class="fixed fixed3" id="fixed3">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>姓名</span>
+                                    <input type="text" class="wd-60" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>级别</span>
+                                    <input type="text" class="wd-60" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>出发时间</span>
+                                    <input class="wd-60" type="text" id="date-group1-5" readonly>
+                                    <span></span>
+                                </div>
+                                <div class="shijian1">
+                                    <span>到达时间</span>
+                                    <input class="wd-60" type="text" id="date-group1-6" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>出发地点</span>
+                                    <input type="text" class="wd-50" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div class="jiaotong">
+                                    <span>到达地点</span>
+                                    <input type="text" class="wd-50" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通方式</span>
+                                    <input type="text" class="wd-50" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通费</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div >
+                                    <span>支付类别</span>
+                                    <input type="text" class="wd-50" flyvalue="" readonly>
+                                    <span ></span>
+                                </div>
+                                <div>
+                                    <span>备注(车牌号)</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 住宿与补助 -->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="stayId" class="apply-second  apply-space"  flyflag='18'  flyset="14|1,3|2,1|3,1|4|7|9|11">
+
+                <div class="container" style="display:none;">
+                    <div class="item" data-status='0'>
+                        <div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,1)">
+                            <div class="apply-second-hua">
+                                <span><span flyshow="0">曹雨虹</span>(<span flyshow="0">科级</span>)</span>
+                                <span><span flyshow="0"></span>(<span flyshow="0">3</span>天)</span>
+                            </div>
+                            <div class="apply-second-hua">
+                                <span class="cl-0089D0"><span flyshow="0">200</span><span class="cl-afa-span">(住宿)</span></span>
+                                <span class="cl-0089D0"><span flyshow="0">100</span><span class="cl-afa-span">(伙食补助)</span></span>
+                                <span class="cl-0089D0"><span flyshow="0">30</span><span class="cl-afa-span">(交通补助)</span></span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn" onclick="itemDelete(this)">删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cs-pt cl-e65 zhusubuzhu" id="zhusubuzhu">
+                    <span>住宿和补助</span>
+                    <div class="none">
+                        <div class="fixed fixed4" id="fixed4">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>姓名</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>级别</span>
+                                    <input type="text" class="wd-60" flyvalue="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>地点</span>
+                                    <input type="text" class="wd-60" flyvalue=""  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>天数</span>
+                                    <input type="text" class="wd-60" >
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>住宿标准</span>
+                                    <input type="text" class="wd-60" value="100" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>住宿金额</span>
+                                    <input type="text" class="wd-60" value="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>伙食补助标准</span>
+                                    <input type="text" class="wd-60" value="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>伙食金额</span>
+                                    <input type="text" class="wd-60" value="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通补助标准</span>
+                                    <input type="text" class="wd-60" value=""  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>交通补助金额</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支付类别</span>
+                                    <input type="text" class="wd-50" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>电子票据</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 费用计算 -->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="subsidyId" class="apply-third apply-space"  flyflag='18'  flyset="14|1,3|2,1|3|5|6|7">
+
+                <div class="container"  style="display: none">
+                    <div class="item" data-status='0'>
+                        <div class="content"  flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,1)">
+                            <div class="apply-third-div">
+                                <span class="wd-60"><span flyshow="0">曹雨虹</span>(<span flyshow="0">科级</span>)</span>
+                                <span class="jt-end" e0d><span flyshow="0">2</span>(天)</span>
+                            </div>
+                            <div class="apply-third-div">
+                                <span class="wd-60 cl-0089D0 ta-lt"><span flyshow="0">4000000</span><span class="cl-afa-span">(交通费)</span></span>
+                                <span class="wd-60 cl-0089D0"><span flyshow="0">4000000</span><span class="cl-afa-span">(住宿费)</span></span>
+                                <span class="wd-60 cl-0089D0 ta-rt"><span flyshow="0">4000000</span><span class="cl-afa-span">(伙食)</span></span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn" onclick="itemDelete(this)">删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cl-e65 cs-pt jisuan apply-third-last" id="jisuan">
+                    <span>费用计算</span>
+                    <div class="none">
+                        <div class="fixed fixed1" id="fixed1">
+                            <div class="lvcheng jiaotong">
+                                <div>
+                                    <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span>
+                                    <input type="text" class="wd-60"  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>
+                                    <input type="text" class="wd-60"  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>城市间交通费</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>住&nbsp;宿&nbsp;费</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>伙食补助</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>市内交通</span>
+                                    <input type="text" class="wd-60" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>其他费用</span>
+                                    <input type="text" class="wd-60"  readonly >
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--支付信息-->
+            <input type="text" flyflag='7'  flyvalue="々" style="display:none;">
+            <div id="payTableId" class="apply-fifth apply-space applyLastDiv" flyflag='18'  flyset="5|0,2|4,1|3|1,1|2">
+
+                <div class="container" style="display: none">
+                    <div class="item" data-status='0' >
+                        <div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,0)">
+                            <div class="apply-fifth-div">
+                                <div>
+                                    <span class="wd-50"><span flyshow="0">收款人1</span>(<span flyshow="0">公务卡</span>)</span>
+                                    <span class="wd-50 cl-e0d jt-end">￥<span flyshow="0">1000</span></span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 cl-afa ta-lt"><span flyshow="0">亚运村支行</span></span>
+                                    <span class="wd-70 cl-afa jt-end"><span flyshow="0">222222222222222222222</span></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="del-btn" onclick="itemDelete(this)">删除</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="cs-pt cl-e65 zhifuxinxi" id="zhifuxinxi">
+                    <span>支付信息</span>
+                    <div class="none">
+                        <div class="fixed fixed5" id="fixed-3">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>收款人</span>
+                                    <input type="text" class="wd-60" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>开户行</span>
+                                    <input type="text" class="wd-60" flyvalue='' readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>账号</span>
+                                    <input type="text" class="wd-60" flyvalue="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>金额</span>
+                                    <input type="text" class="wd-60"  readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支付类别</span>
+                                    <input type="text" class="wd-60" flyvalue="" readonly>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi" onclick="windowClose(this)">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="opButtons" class="apply-footer details-footer">
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<!--<script src="../js/zui.js"></script>-->
+<!--<script src="../js/imgUp.js"></script>-->
+<script type="text/javascript" src="../js/rolldate.min.js"></script>
+
+<script type="text/javascript" src="../js/common.js"></script>

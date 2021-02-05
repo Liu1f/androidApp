@@ -1,0 +1,697 @@
+﻿/*! flywings v1.0 | (c) 2018,widesky technology information, Inc. | flywings/license */
+
+
+document.write("<script type='text/javascript' src='"+ getRealPath()+"/js/jsthrowexceptionapp.js'></script>");
+document.write("<script type='text/javascript' src='"+ getRealPath()+"/js/crypto-js.js'></script>");
+
+String.prototype.trim  = function(){return this.replace(/^\s+|\s+$/g,"");}
+String.prototype.Ltrim = function(){return this.replace(/^\s+/g, "");}
+String.prototype.Rtrim = function(){return this.replace(/\s+$/g, "");}
+
+
+	
+	var flag_a = "";
+	var fun_a = ""; //函数名
+	var params_a = {};//json
+	var http_request = false;
+  var httpRequest = false;
+
+	
+/*
+   取得ajax对象
+ */
+function  getHttpRequest() {
+ 	
+ 	 http_request = false;		
+		
+		//开始初始化XMLHttpRequest对象
+   if(window.XMLHttpRequest) { //Mozilla 浏览器
+       http_request = new XMLHttpRequest();
+     if (http_request.overrideMimeType) {//设置MiME类别
+     	//alert("1");
+      http_request.overrideMimeType("text/xml");
+     }
+   }
+   else if (window.ActiveXObject) { // IE浏览器
+     try {
+        http_request = new ActiveXObject("Msxml2.XMLHTTP");
+     } catch (e) {
+       try {
+         http_request = new ActiveXObject("Microsoft.XMLHTTP");
+       } catch (e) {}
+     }
+   }
+
+	 if (!http_request) { // 异常，创建对象实例失败
+			window.alert("不能创建XMLHttpRequest对象实例.");
+			return false;
+	 }
+ 	 return http_request;
+ }
+/*
+   ajax同步调用
+ */
+ function  getHttpResponse(serverUrl,flag,info) {
+ 	
+ 	 httpRequest = getHttpRequest();
+ 	 
+ 	
+ 	 if(!httpRequest) { 	 	
+ 	 	 alert("您所请求的页面有异常!") 
+ 	 	 return;
+ 	 } 	 
+ 	
+ 	 // URL中一些特殊字符的转义.
+ 	 if(info.indexOf("%")>-1)
+	    info = info.replace(/\%/g,"%25");
+	    
+	 // //设置服务器ip，在调试的时候用。正式使用写为访问ip。
+	 var serverIp = window.localStorage.getItem("serverIp");
+	 if(!serverIp || serverIp.trim().length<1)
+	      serverIp = "localhost";
+	      
+	 var sessionId = window.localStorage.getItem("sessionId");
+	 if(flag=="login")
+	    serverUrl = "http://"+serverIp+":8081"+serverUrl;
+	 else
+		  serverUrl = "http://"+serverIp+":8081"+serverUrl+";jsessionid="+sessionId; 		
+    
+    var dataTransferUrl = "http://20.124.143.80:80/TransferAPI/api/hzjgdatatran/datatran2to3";
+		httpRequest.open("POST", dataTransferUrl, false);		//将ajax执行设置为同步	
+		//httpRequest.open("POST", serverUrl, false);		//将ajax执行设置为同步	
+		
+		httpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");		
+		//httpRequest.setRequestHeader("App-Platform","Android");
+		//httpRequest.setRequestHeader("access-control-allow-origin","*");
+		//httpRequest.setRequestHeader("clientType","mobile");
+    
+    info = info+"&flag="+flag;
+    
+		
+          /**
+           * 数据交换处理开始
+           *    用作贵港警务保障平台app数据交换使用,要求如下：
+           *    1、请求方式post
+           *    2、请求体(postman的body):
+           *          参数1：ApiUrl 实际访问内控系统的url
+           *          参数2：requestcontent 实际访问内控系统携带的请求参数，将所有参数包装为一个json对象字符串
+           *    3、请求头(headers):
+           *          参数1：appid 接入文档审核通过后下发的app唯一编号
+           *          参数2：signature 请求体中的参数1、请求体中的参数2、接入文档审核通过后下达的密钥字符串，三个字符串拼接并进行SHA256加密后转为小写
+           */
+
+          //1、app的id号和密钥字符串
+          //var appId = "10000484";
+          //var appSecret = "J4B3TsmFR1bPCXUiVLsJEMNU37kWGqKf";
+          var appId = "1012"
+          var appSecret = "9488E2B41DB2AF505BC16B4C058F80AD";
+          
+          
+          //2、包装处理请求参数  info : progId=baseSelectSel&preReq=T0064|i0002&query=
+          //                    目标 : {'progId':'baseSelectSel','preReq','T0064|i0002','query',''};
+          var paramsArr = info.split("&");         //通过&切割成参数数组 [progId=baseSelectSel, preReq=T0064|i0002, query=]
+          var urlContent = "{";
+
+          for(var i=0; i<paramsArr.length; i++){   //遍历数组，切割、拼接请求参数
+              var mArr = paramsArr[i].split("=");
+              urlContent += "\""+mArr[0]+"\":\""+mArr[1]+"\",";
+          }
+
+          urlContent = urlContent.substring(0,urlContent.length-1) + "}";
+          
+
+          //3、设置请求体 Apiurl(实际请求内控系统的url) 和 requestcontent {'progId':'baseSelectSel','preReq','T0064|i0002','query',''};
+          info = "Apiurl="+serverUrl+"&requestcontent="+urlContent;
+
+
+          //4、数据拼接加密，生成signature字符串，并设置请求头
+          var value = serverUrl + urlContent + appSecret;
+          var signatureStr = CryptoJS.SHA256(value).toString(CryptoJS.enc.Hex);
+
+          httpRequest.setRequestHeader("appid",appId);
+          httpRequest.setRequestHeader("signature",signatureStr);
+
+          /**
+            *	数据交换处理结束
+            */
+    
+            
+     httpRequest.send(info);
+		
+ 	if(httpRequest.readyState==4 && httpRequest.status==200){ 	 
+ 		
+ 		var str = httpRequest.responseText; //把AJAX页面数据返回 
+ 		
+ 		if(str == "timeoutsession") {  
+ 					
+    		 autoLogin();
+    		 return;    		
+    }
+ 		
+    return str; //把AJAX页面数据返回 
+
+  } else {  	
+  	 alert("您所请求的页面有异常。");
+  }   
+ }
+ /**
+   * ajax异步调用,主要用来传输文件。设置 content type header is multipart/form-data，主要用来传输文件。
+   * @para flag ajax调用操作标识
+   * @para serverUrl ajax调用地址
+   * @para info ajax调用传递参数
+   * @return 返回结果后调用processRequest方法。serverUrl,flag,info
+   */
+	function send_multipart_request(flag,serverUrl,info) {//初始化、指定处理函数、发送请求的函数		
+		
+		http_request = false;		
+		
+		//开始初始化XMLHttpRequest对象
+   if(window.XMLHttpRequest) { //Mozilla 浏览器
+       http_request = new XMLHttpRequest();
+     if (http_request.overrideMimeType) {//设置MiME类别
+     	//alert("1");
+      http_request.overrideMimeType("text/xml");
+     }
+   }
+   else if (window.ActiveXObject) { // IE浏览器
+      try {
+              http_request = new ActiveXObject("Msxml2.XMLHTTP");
+           } catch (e) {
+              try {
+                     http_request = new ActiveXObject("Microsoft.XMLHTTP");
+              }         catch (e) {}
+           }
+   }
+
+		if (!http_request) { // 异常，创建对象实例失败
+			window.alert("不能创建XMLHttpRequest对象实例.");
+			return false;
+		}
+		
+    http_request.onreadystatechange = processRequest;	
+    
+    flag_a = flag; //全局变量，操作标识
+    
+    //serverUrl = serverUrl+"?flag="+flag; //为调用服务添加操作标识 
+  //使用FormData不必明确地在XHR对象上设置请求头部。XHR对象能够识别传入的数据类型是FormData的实例，并配置适当的头部信息。
+		http_request.open("POST", serverUrl, true);			//true 将ajax执行设置为异步	
+		//http_request.setRequestHeader("Content-Type","multipart/form-data");		
+		//http_request.setRequestHeader("Content-Type","multipart/form-data;boundary=abcde");	
+	                               //("Content-Type", "multipart/form-data; boundary=ABCD"); 
+		http_request.send(info);		
+	}
+ /**
+   * ajax异步调用，设置 content type header is "application/x-www-form-urlencoded;charset=UTF-8"
+   * @para flag ajax调用操作标识  
+   * @para serverUrl ajax调用地址
+   * @para info ajax调用传递参数，格式info = "regUser="+regUser+"&regPass="+regPass+"&regCompany="+regCompany
+   * @para fun ajax执行成功后，调用的处理函数对象,用以处理返回的字符串.
+   * @return 返回结果后调用processRequest方法。
+   */
+	function send_request(flag,serverUrl,info,fun) {//初始化、指定处理函数、发送请求的函数		
+		
+		http_request = false;		
+		
+		//开始初始化XMLHttpRequest对象
+   if(window.XMLHttpRequest) { //Mozilla 浏览器
+       http_request = new XMLHttpRequest();
+     if (http_request.overrideMimeType) {//设置MiME类别
+     	//alert("1");
+      http_request.overrideMimeType("text/xml");
+     }
+   }
+   else if (window.ActiveXObject) { // IE浏览器
+      try {
+              http_request = new ActiveXObject("Msxml2.XMLHTTP");
+           } catch (e) {
+              try {
+                     http_request = new ActiveXObject("Microsoft.XMLHTTP");
+              }         catch (e) {}
+           }
+   }
+	if (!http_request) { // 异常，创建对象实例失败
+			window.alert("不能创建XMLHttpRequest对象实例.");
+			return false;
+		}
+		
+    http_request.onreadystatechange = processRequest;	    
+    
+    fun_a = fun;
+    
+    serverUrl = serverUrl+"?flag="+flag; //为调用服务添加操作标识 
+   
+		http_request.open("POST", serverUrl, true);			//true 将ajax执行设置为异步	
+		http_request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");		
+	
+	  //http_request.setRequestHeader("App-Platform","Android");
+		//http_request.setRequestHeader("access-control-allow-origin","*");
+		//http_request.setRequestHeader("clientType","mobile");
+		
+	  //添加等待遮罩层
+	  //if(info.length>40000)
+ 	     //ajaxPubShadeLayLoading();
+ 	 
+		http_request.send(info);		
+	}
+// ajax异步调用,处理返回信息的函数
+function processRequest() {
+	
+
+  if (http_request.readyState == 4) { // 判断对象状态    	
+  	
+    if (http_request.status == 200) { // 信息已经成功返回，开始处理信息
+    	
+     //去除遮罩层
+ 	    ajaxPubShadeLayLoadingClose(); 	
+ 	
+    	var str = http_request.responseText;  
+    	
+    	if(str == "timeoutsession") {    		
+    		 autoLogin();
+    		 return;    		
+    	}
+    	
+      if(fun_a!="") {	  	
+	  	 
+          eval( "var _function = " + fun_a );
+          _function(str);
+	  	 
+	        return;
+	    }
+	      	
+    }else { //页面不正常    	
+      alert("您所请求的页面有异常。");      
+    }
+  }
+}
+/**
+   * 添加遮罩等待层。当上传文件或提交后台时，等待返回信息显示。当弹出一个层，则只能操作该层，不能操作原页面，需要在原页面加一个层遮挡。
+   * @return 
+   */
+function ajaxPubShadeLayLoading(){
+	 
+	 
+	 if(document.getElementById('ajaxPubShadeLayLoadingId')){
+	 	
+	    document.getElementById('ajaxPubShadeLayLoadingId').style.display="block";
+	    
+	    return;
+	 }
+	 
+	 var allPage  = document.createElement("div"); 
+	 allPage.style.cssText = "z-index:115;width:100%;height:100%;background-color:#000;filter:alpha(opacity=20);-moz-opacity:0.2;opacity:0.2;position:absolute;left:0px;top:0px;";
+	 allPage.id = "ajaxPubShadeLayLoadingId";
+	 allPage.innerHTML = "<div style='position: absolute; top: 40%;left: 40%;width: 20%;height: 20%;text-align:center;'><img  src='/fwis/com/is/flywings/pub/img/loading.gif'/></div>";
+	 	
+	 document.getElementsByTagName("body")[0].appendChild(allPage);
+	 
+	 return;	
+}
+/**
+   * 关闭遮罩等待层。当弹出一个层，则只能操作该层，不能操作原页面，需要在原页面加一个层遮挡。 
+   * @return 
+   */
+function ajaxPubShadeLayLoadingClose(){	
+	
+	if(document.getElementById('ajaxPubShadeLayLoadingId'))
+	  document.getElementById('ajaxPubShadeLayLoadingId').style.display="none";
+	 
+	 
+	 /*
+	 var obj = document.getElementById('ajaxPubShadeLayLoadingId');
+	 obj.parentNode.removeChild(obj); 	
+	 */	
+}
+//是否存在指定函数 
+function isExitsFunction(funcName) {
+	 		   
+    try {    	  	
+        if (typeof(eval(funcName)) == "function") {
+            return true;
+        }
+    } catch(e) {}
+    return false;
+}
+//是否存在指定变量
+function isExitsVariable(variableName) {
+	
+  try {
+  	
+    if (typeof(eval(variableName)) == "undefined") {     
+      return false;
+    } else {      
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+ /**
+   * 传递函数名，处理为真实函数，并处理传递的字符串或对象.
+   * @para fun 函数对象。调用fun处理函数对象,用以处理str字符串或对象.
+   * @para str fun函数处理参数，如字符串。  
+   */
+function excFun(fun,str){
+	  	  
+	  if(fun!="") {	  	
+	  	 
+      eval( "var _function = " + fun );
+      _function(str);
+	  	
+	    return;
+	  }
+}
+ /**
+   * 设置客户端服务器地址.通过主服务器登录后，取得客户端IP，存储在前端。相关业务操作，通过客户端服务器处理。
+   * @para info 传递参数，以格式info = "regUser="+regUser+"&regPass="+regPass+"&regCompany="+regCompany。
+   * @para fun  ajax执行成功后，调用的处理函数对象,用以处理返回的字符串.  
+   */
+function excServer(info,fun){	
+	  
+	//alert(getClientServerUrl());
+	//alert(info);
+	send_request(getClientServerUrl(),info,fun);
+}
+ /**
+   * 设置客户端服务器地址.通过主服务器登录后，取得客户端IP，存储在前端。相关业务操作，通过客户端服务器处理。
+   * @para serverIp IP地址.   
+   */
+function setClientServerUrl(serverIp){	
+	  
+	var serverUrl = "http://"+serverIp+":8080"; //tomcat	
+	//alert(serverUrl);
+	window.localStorage.setItem("clientServerUrl", serverUrl);	   
+}
+
+ /**
+   * 取得客户端服务地址.通过主服务器登录后，取得客户端IP，相关业务操作，通过客户端服务器处理。 
+   * 服务端所有访问，通过 u8controlservlet路由，前段不直接访问。
+   */
+function getClientServerUrl()
+{		  
+	  var serverUrl = window.localStorage.getItem("clientServerUrl");
+	  serverUrl = serverUrl+"/servlet/u8controlservlet";	 
+	  
+	  return  serverUrl;
+}
+function getURLParameter1(name) {
+return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+function getURLParameter(name) {
+
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+
+}
+	
+/**
+   * 解析进入该页url传递参数。将多个变量，赋值给json 
+   * @return   json对象
+   */
+function getRequest() {  
+	
+	 
+   var url = window.location.search; //获取url中"?"符后的字串
+   //var url1 = document.location.toString();//获取url地址
+   //var url2 = location.href;
+   
+   var params_a = {};
+   var arr = "";
+
+   if (url.indexOf("?") != -1) {
+   	
+   	 
+      var str = url.substr(1);
+
+      strs = str.split("&");
+
+      for(var i = 0; i < strs.length; i ++) {
+      	
+         arr = strs[i].split("=");
+         eval("params_a."+arr[0]+"='"+arr[1]+"'");  
+      }
+   }
+   
+   return params_a;
+}
+/**
+   * alert定义错误代码的错误信息，没有定义，alert“抱歉，运行错误，请重试。”
+   * @return 
+   */
+function ajaxPubAlertError(errorCode){
+	
+	var str = eval("jsThrowException_a."+errorCode);
+	
+	if(str)
+	   return str;
+	else
+	   return "抱歉，运行错误，请重试。";
+}
+//导向页面
+function locationPostWindow(url, paramArr,lFlag,openParam,openName)
+{
+	  var hideInput = "";
+	
+    var tempForm = document.createElement("form");
+    tempForm.id = "tempForm1";
+    tempForm.method = "post";
+    tempForm.action = url;
+    //tempForm.enctype = "application/x- www-form-urlencoded";
+    
+    if(lFlag=="O") // 是否是弹窗。_blank - URL加载到一个新的窗口
+       tempForm.target = "_blank";  
+    else
+    	 tempForm.target = "_self";  
+    
+    for (var i=0;i<paramArr.length;i=i+2){ 	
+    	 alert(paramArr[i]+"="+paramArr[i+1]);
+    	 hideInput = document.createElement("input");
+       hideInput.type = "hidden";
+       hideInput.name = paramArr[i];
+       hideInput.value = paramArr[i+1];
+       tempForm.appendChild(hideInput); 
+    }
+    
+    //var but = document.createElement("input");
+    
+    //添加事件
+    if(document.all){    // 兼容不同浏览器  IE
+    	
+    	  alert("Ie");
+    	
+    	  if(lFlag=="O") // 是否是弹窗
+    	     tempForm.attachEvent("onsubmit",function(){window.open("",openParam); });        //IE
+    	  else
+           tempForm.attachEvent("onsubmit",function(){});        
+    }else{  //firefox
+    	  alert("firefox");
+    	  if(lFlag=="O") // 是否是弹窗
+           tempForm.addEventListener("submit",function(){window.open("",openParam);},false);    //firefox
+        else
+        	 tempForm.addEventListener("submit",function(){},false);    
+    }
+    
+    
+    
+    document.body.appendChild(tempForm);
+    
+    //tempForm.action = url+"?"+paramArr[0]+"="+window.encodeURI(paramArr[1]);
+    
+    
+    //触发事件
+    if(document.all){    // 兼容不同浏览器
+        tempForm.fireEvent("onsubmit");
+    }else{
+    	  //tempForm.fireEvent("onsubmit");
+    	  
+    	var event; 
+      if(typeof(Event)=='function'){
+      	
+         event = new Event('submit'); 
+         
+      } else {
+      	
+         event = document.createEvent('Event'); 
+         event.initEvent('submit',true,true); 
+      }     	  
+    	  
+      tempForm.dispatchEvent(event);
+    }
+    
+    //var obj = document.getElementsByTagName("form").length;
+    
+    //alert("v2 = "+obj);
+    //alert("enctype = "+tempForm.enctype);
+    
+    //document.getElementById("tempForm1").submit();
+    
+    tempForm.submit();
+    
+    //document.body.removeChild(tempForm);
+}    
+/*
+对于样式写在<style type="text/css"></style>或者.css文件里，是无效的.
+currentSytle、defaultView就产生了，currentStyle 是IE提供的，defaultView 则于标准浏览器提供的
+*/
+function getObjStyle(obj,attr)
+{  
+ if(obj.currentStyle)
+ { 	
+  return obj.currentStyle[attr];
+ }
+ else
+ {
+  return document.defaultView.getComputedStyle(obj,false)[attr];
+ }
+}
+function autoLogin(){
+	
+	 var str = window.document.location.href;
+	 
+	 window.location.href = str.substring(0,str.indexOf("/www")+4)+"/login.html";
+	
+	/*
+	  if(self.parent)
+	     self.parent.window.location.href="/fwis/mssl/loginPage";
+	  else if(self.opener)
+	  	 self.opener.parent.window.location.href="/fwis/mssl/loginPage";
+	*/
+	  /* loginSrv
+	  var loginUser = window.localStorage.getItem("lu");
+	  var loginPass = window.localStorage.getItem("lp");
+	  var sUrl = window.localStorage.getItem("clientServerUrl");	  	  
+	  
+	  if(loginUser==null || loginUser.trim().length<3 || loginPass==null || loginPass.trim().length<3 || sUrl==null || sUrl.trim().length<3) {
+	  	   window.location.href="login.html";  
+	  	   return;
+	  }
+	  
+	  var info = "program=login&flag=login&loginUser="+loginUser+"&password="+loginPass;	  
+	
+	  excServer(info,"loginIn");	   
+	  */
+	  return;
+}
+function loginIn(str){	
+	
+	if(str == "success")
+	  window.location.href="fun.html"; 
+	else 
+		window.location.href="login.html"; 
+	
+	return;
+}
+//登录成功后，导向日志页面
+function locateFrame(str){		
+	  
+	   if (str == "LF"){     	   	
+     	   alert("抱歉，登录没有成功，请重新登录！");
+     	   window.location.href="login.html"; 
+     	   return; 
+     }
+	   localStorageManage(str); 
+	       
+     window.location.href="xsrz.html";  
+}
+//关联项目管理
+function localStorageManage(str)
+{	
+	/*
+	var loginUser = window.localStorage.getItem("lu");	
+	if(loginUser!=loginUser_a) {
+	   window.localStorage.setItem("tp",null);	//模板项目
+	   window.localStorage.setItem("lu",loginUser_a);	//
+	   
+	 }
+	 */
+	if(str=="null" || str==null || str=="LF" || str.trim().length<1) {		
+	   return;
+	}
+	
+	
+	/*
+	   模板json对象，结构
+	var tp = {
+	   "currentTp" : ["12","年底冲刺日报"], //当前显示模板代码、名称
+	   
+     "tpCode1": [
+ 
+     ["12","年底冲刺日报"],//模板代码、模板名称
+     //模板中项目名称，按显示顺序号
+     ["Brett","客户","项目","销售数量","销售金额","拜访客户","今日返款","明日预计销售数量","明日预计返款"],
+     //以下为每个项目的属性：field_code, field_name, field_type, order_no, isnull, sel_item_code
+     [ "itemCode1","Hunter1","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode2","Hunter2","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode3","Hunter3","bbbb","bbbb","bbbb","bbbb","itemCode3","刘传峰 ","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode4","Hunter4","bbbb","bbbb","bbbb","bbbb"]
+    ], 
+     
+    "tpCode2": [
+ 
+     ["10","教育项目日报"],//模板代码、模板名称
+     //模板中项目名称，按显示顺序号
+     ["Brett","客户","项目","销售数量","销售金额","拜访客户","今日返款","明日预计销售数量","明日预计返款"],
+     //以下为每个项目的属性：field_code, field_name, field_type, order_no, isnull, sel_item_code
+     [ "itemCode1","Hunter1","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode2","Hunter2","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode3","Hunter3","bbbb","bbbb","bbbb","bbbb","itemCode3","刘传峰 ","bbbb","bbbb","bbbb","bbbb"],
+     [ "itemCode4","Hunter4","bbbb","bbbb","bbbb","bbbb"]
+   ]  
+};
+	
+	*/
+	
+	//日报名称数组初始化
+	
+	var temArr = new Array(); 
+	var temArr2 = new Array(); 	
+	var tpItemsNameArr = new Array(); 	
+	
+	var tp = {};	//模板
+	
+	//生成日报名称数组
+	temArr = str.split("|");
+	
+	temArr2 = temArr[0].split(",");
+	tp.currentTp = [temArr2[0],temArr2[1]];	//当前显示模板代码、名称
+	var tpCodeKey = "T"+temArr2[0];	
+	
+	var tpItems = new Array(temArr.length+1); 
+	tpItems[0] = [temArr2[0],temArr2[1]]; //该模板代码、名称
+	
+	for(var i=1; i<temArr.length; i++){
+	   temArr2 = temArr[i].split(",");
+	   tpItemsNameArr[i-1] = temArr2[1];	   
+	   tpItems[i+1] = temArr2; 	   
+	}	
+  tpItems[1] = tpItemsNameArr;
+  
+ 
+  eval("tp."+tpCodeKey+"=tpItems");
+  //alert("tpItems[0] = "+tpItems[0]+" ; tpItems[1] = "+tpItems[1]+" ; tp = "+tp);
+	window.localStorage.setItem('tp',JSON.stringify(tp)); 
+	
+	//var tp1=JSON.parse(localStorage.getItem('tp'));	
+	
+}
+//取得访问页面www的绝对路径。
+function getRealPath(){
+  //获取当前网址，如： http://localhost:8083/myproj/view/my.jsp
+   var curWwwPath=window.document.location.href;
+   //获取主机地址之后的目录，如： myproj/view/my.jsp
+  var pathName=window.document.location.pathname;
+  //alert(pathName);
+  var pos=curWwwPath.indexOf(pathName);
+  //获取主机地址，如： http://localhost:8083
+  var localhostPaht=curWwwPath.substring(0,pos);
+  //alert(localhostPaht);
+  //获取带"/"的项目名，如：/myproj
+  //var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+  var projectName=pathName.substring(0,pathName.substr(1).indexOf('www')+4);
+  //alert(projectName);
+ //得到了 http://localhost:8083/myproj
+  var realPath=localhostPaht+projectName;
+  
+  return realPath;
+  //alert(realPath);
+}
+
+

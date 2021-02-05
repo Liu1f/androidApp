@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>会议申请</title>
+		<meta charset="utf-8">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+		<meta name="renderer" content="webkit">
+
+		<link rel="stylesheet" href="../font/iconfont.css">
+		<link rel="stylesheet" href="../css/reset.css">
+		<link rel="stylesheet" href="../css/data.css">
+		<link rel="stylesheet" href="../css/zui.css">
+		<link href="../css/common.css" type="text/css" rel="stylesheet">
+		<link href="../css/index.css" type="text/css" rel="stylesheet">
+
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.rotate.min.js"></script>
+		<script src="../js/rem.js"></script>
+		<script type="text/javascript" src="../js/rolldate.min.js"></script>
+		<script src="../js/flyformdatapageapp.js"></script>
+		<script src="../js/flyeditpageapp.js"></script>
+		<script src="../js/pubToolsapp.js"></script>
+		<script src="../js/pubUtilapp.js"></script>
+		<script src="../js/flycommonselectapp.js"></script>
+		<script src="../js/flyapp.js"></script>
+		<script type="text/javascript" src="../js/ajaxPubapp.js"></script>
+
+		<script type="text/javascript">
+			var loginInsId_a = "";
+			var loginDeptId_a = "";
+			var loginPerId_a = "";
+
+
+			//实现flyeditpage接口，保存成功后导向显示页面。dataKey通用程序已编码
+			function toShowPage(dataKey, authFlag, flag) {
+
+				window.location.href = "meetingApplyShow.html?flag=Show&dataKey=" + dataKey + "&authFlag=" + authFlag + "&progId=" +
+					flyEditPageGetProgId();
+			}
+
+			/**
+		         * 保存校验。实现flyeditpage接口。
+		         * 实现js接口.修改或保存提交时，当前特殊业务进行校验。
+		         * (必输、编码合规性、数字、长度、非法字符这里不用校验，程序已自动校验。)
+		
+		         * @return true or false
+		         */
+			function flyEditPageSubmitCheck() {
+
+				//设置为录入人不选择指标，则不校验。
+				// if (isPostSetPayIndex())
+				return true;
+
+				//指标校验。
+				// return payEditPageIndexCheck(1);
+
+
+			}
+			/**
+			 * 审批校验。实现flyeditpage接口。审批时，校验提交数据是否符合审批提交要求。
+			 * 审批时，才需要实现该接口，没有审批，不需要。
+			 * @param fromId  输入区域form。
+			 * @return 合规返回true；不合规返回false
+			 */
+			function appPageCheck(fromId) {
+
+				return true;
+			}
+
+			/**
+			 * 后台服务器操作接口。
+			 * 1、确定servlet地址即可
+			 * 2、后台取值两个，flag、opValue。
+			 * 3、根据flag判断，拆串opValue，进行处理
+			 * @param flag     操作标识
+			 * @param opValue  处理的值，一般为拼串。到后台要拆串
+			 * @return 处理结果值。正确返回相应值或标识，错误返回错误标识，由前台提示
+			 */
+			function toServerOp(flag, opValue) {
+
+				if (opValue && opValue.indexOf("|々|") > 0)
+					opValue = opValue.replace(/\|々\|/g, "々")
+
+				var info = "opValue=" + opValue;
+				var result = getHttpResponse("/fwis/mssl/payMeetingApplySrv", flag, info);
+
+				return result;
+			}
+
+			/**
+		         * 选择
+		         * 弹出选择页面,参数说明
+		         * @ progId      选择程序代码，不可为空
+		         * @ preCon      选择程序前置条件，可为空。根据定义，对应条件值，如不传递则nbsp，返回则传递相应值，如nbsp|001|T03。则传递第二、第三个值，第一个不传递。
+		         * @ query       选择程序查询条件，可为空
+		         * @ selFlag     返回值拼串。根据定义，对应返回值，0不返回，1返回。如"1|0|1"，则返回第一个和第三个值。
+		         * @ backFun     返回值调用的函数。
+		         * @ selType     选择模式，S，单选；M，多选
+		         * @ conSql      特殊情况时加入自己需要的sql
+		         * @ receiveObj  接收返回值对象
+		         * @ orderBy     排序语句
+		         * @ showModel   显示模式。A，一行内容2个值，一个左对齐、一个右对齐；T，两行，4个值，每行2个。不够显示值的，以空
+		         * @ showValue   显示字段。如果为定义的下拉列表选择，为SELECT；
+		         如果为定义的弹窗选择，将显示数据序号转为整数数组，显示的数字不为零，为返回拼串拆分数组的序号。如5|0|3|0|1，则第一个显示为
+		         第5个内容，第二个不显示，第二个显示为第3个内容
+		
+		         * @ return      单选，返回一个数组[];多选返回组合数组，[[],[],[]]，组合数组中每个数组是选中的一个值。
+		
+		         回调函数setSelAssetType(assetArr)
+		         */
+			function getSel(obj, typeFlag) {
+
+				var selProgId = "";
+				var preCon = "";
+				var query = "";
+				var selType = "S"; //默认单选
+				var selFlag = "";
+				var backFun = "";
+
+				var conSql = "";
+				var orderBy = "";
+				var showModel = "A"; //默认一行显示
+				var showValue = "";
+
+				//同行人为多选，项目、指标为单选
+				if (typeFlag == "I") { //项目
+
+					selProgId = "projectSelPage";
+					preCon = loginInsId_a + "|nbsp|nbsp|nbsp|nbsp|nbsp";
+					backFun = "commonSelectSetSelInput";
+					selFlag = "0|1|0|0|0|0|0|1";
+					showValue = "7|4|0|0|0|0|0|0";
+
+				} else if (typeFlag == "D") { //指标
+
+					selProgId = "indexDetailSelect";
+					preCon = loginInsId_a;
+					backFun = "indexSet";
+					selFlag = "1|1|1|1|1";
+					showValue = "4|3|0|0|0|0|0|0";
+					conSql = " i_leaf='Y'";
+					orderBy = "i_year desc,case when decom_user_id in ('" + loginDeptId_a + "','" + loginPerId_a +
+						"')  then 1 ELSE 6 END";
+
+				} else if (typeFlag == "P") { //出差人员
+
+					selProgId = "personSelectPage";
+					preCon = loginInsId_a + "|nbsp";
+					backFun = "commonSelectSetSelArrLabel";
+					selType = "multiple";
+					selFlag = "1|0|1|1|0|1";
+					showValue = "0|0|5|0|0|2";
+					orderBy = "(case when sys_dept_id ='" + loginDeptId_a + "' then 1 ELSE 6 END)";
+
+				} else if (typeFlag == "O") { //编外人员
+
+					openOutPersonInputSel(obj, loginInsId_a);
+					return;
+
+				} else if (typeFlag == "A") { //出差地址
+
+					//处理市郊区出行，与外地出差地点
+					var defTypeId = document.getElementById('defType').value;
+					if (defTypeId == "bd1097")
+						conSql = " addr_type_id='N'";
+					else
+						conSql = " (addr_type_id<>'N' or  addr_type_id is null)";
+
+					selProgId = "travelAddrSelectPage";
+					preCon = loginInsId_a + "|nbsp";
+					backFun = "addrSelSet";
+					selType = "";
+					selFlag = "1|1|0|0|0|0";
+					showValue = "1|3|0|0|0|0";
+					orderBy = "sel_order desc";
+				} else if (typeFlag == "S") { //支出事项
+
+					selProgId = "payStandardSelPage";
+					preCon = loginInsId_a + "|M";
+					backFun = "payStandardSet";
+					selType = "";
+					selFlag = "1|1|1|1";
+					showValue = "1|3|0|0";
+				}
+
+				commonSelectAppPageInit(selProgId, preCon, query, selFlag, backFun, selType, conSql, obj, orderBy, showModel,
+					showValue);
+				//commonSelectPageInit(selProgId,preCon,"",90,80,3,10,selFlag,backFun,selType,conSql,obj,orderBy);
+
+			}
+			/**
+			 * 实现flycommonselect接口，在调用commonSelectSetSelArrLabel方法前，在同行人员费用区，生成同行人员费用情况。
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function commonSelectSetSelArrLabelReback(selArr, obj) {
+
+				/*
+		            var str = "'"+document.getElementById("personSelId").value+"'";
+		            for(var i=0;i<selArr.length;i++)
+		                str+= ",'"+selArr[i][2]+"'";
+		
+		            perAmtCount(str);
+		
+		
+		            if(obj.id == "togetherId"){
+		
+		               document.getElementById("togetherNumId").value = selArr.length;
+		
+		               togetherPerUpdTip();//增加人员时，提示是否重新计算人员费用
+		            }
+		            */
+				return true;
+			}
+			/**
+			 * 实现flycommonselect接口，在调用commonSelectSetSelArrLabel方法后，在同行人员费用区，生成同行人员费用情况。
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  span对象
+			 * @return
+			 */
+			// function commonSelectSetSelArrLabelRebackAfter(selArr, obj) {
+
+			// 	if (obj.id != "togetherId")
+			// 		return true;
+
+			// 	//document.getElementById("togetherNumId").value = obj.getElementsByTagName("label").length;
+
+			// 	//togetherPerUpdTip();//增加人员时，提示是否重新计算人员费用
+
+			// 	return true;
+			// }
+			/**
+			 * 实现flycommonselect接口,删除页面已选文件或数据前，可实现该方法从后台删除实际数据。
+			 * @param obj   label 对象。取得键值和名称：obj.getAttribute("flyvalue");  ,返回;labelValue+"⌒"+labelName
+			 * @return 执行成功返回true；失败返回false
+			 */
+			// function commonSelectDelSelLabelData(obj) {
+
+			// 	if (obj.parentNode.id == "togetherId") {
+
+			// 		var perNumObj = document.getElementById("togetherNumId");
+
+			// 		perNumObj.value = parseInt(perNumObj.value) - 1;
+
+			// 		return true;
+			// 	}
+
+			// 	var arr = obj.getAttribute("flyvalue").split("⌒");
+
+			// 	opValue = document.getElementById("billId").value + "|" + arr[1];
+
+			// 	var result = toServerOp("DelAFile", opValue);
+			// 	//var result=toServerOp("DelFile",document.getElementById("billId").value+"|"+obj.getAttribute("flyvalue")+"|"+obj.innerHTML.split("<a")[0]);
+
+			// 	if (result == "Y") {
+			// 		return true;
+			// 	} else {
+			// 		return false;
+			// 	}
+
+			// }
+			/**
+			 * 实现flycommonselect接口,删除页面已选文件或数据后，可实现该方法从后台删除实际数据。
+			 * @param obj   span 对象。
+			 * @return 执行成功返回true；失败返回false
+			 */
+			function commonSelectDelSelLabelDataAfter(obj) {
+
+				if (obj.id != "togetherId")
+					return true;
+
+				togetherPerUpdTip(); //删除人员后，提示是否重新计算人员费用
+
+				return true;
+
+			}
+			/**
+		         * 同行人员变化，增加或删除，提示是否进行重新计算。如果确定则重新计算费用，取消则返回。
+		
+		         * @return
+		         */
+			// function togetherPerUpdTip() {
+
+			// 	var tableObj = document.getElementById("preTravel").getElementsByTagName("table")[0];
+			// 	if (tableObj.rows.length < 3)
+			// 		return;
+
+			// 	if (confirm("同行人员变化，是否重新计算费用？(重新计算会覆盖原来费用金额)") == true) {
+
+			// 		repeatCount();
+			// 	}
+
+			// 	return;
+
+			// }
+			/**
+		         * 地点选择回调函数，设置出发地点，并将当前到达地点设置为下一行出发地点。
+		
+		         * @param arr  选择返回指标信息数组
+		         * @param obj  选择表单对象
+		         * @return
+		         */
+			// function addrSelSet(selArr, obj) {
+
+			// 	commonSelectSetSelInput(selArr, obj);
+
+			// 	var flytype = obj.getAttribute("flytype");
+			// 	if (flytype && flytype == "addr") {
+
+			// 		var trObj = obj.parentNode.parentNode;
+			// 		var tableObj = obj.parentNode.parentNode.parentNode;
+
+			// 		if (trObj.rowIndex >= tableObj.rows.length - 1)
+			// 			return;
+
+			// 		var n = obj.parentNode.cellIndex; //当前td序号
+			// 		var nextRowInputObj = tableObj.rows[trObj.rowIndex + 1].cells[n - 1].getElementsByTagName("input")[0];
+
+			// 		//设置出发地点
+			// 		nextRowInputObj.setAttribute("flyvalue", selArr[0]);
+			// 		nextRowInputObj.value = selArr[1];
+			// 	}
+
+			// }
+			/**
+			 * 根据行程计算出差人员住宿、交通补助、伙食补助。
+			 * @param perIds  人员id的sql查询拼串
+			 * @return
+			 */
+			// function perAmtCount(perIds) {
+
+			// 	//取得人员代码、结束日期-开始日期、地点代码、城市间交通费
+			// 	var tem = new Array();
+			// 	var tem1 = new Array();
+			// 	var nNays = ""; //自然天数
+			// 	var days = ""; //住宿天数
+			// 	var amt = "";
+			// 	var n = 0;
+
+			// 	//取数
+			// 	var pInfo = flyFormDataPageGetData("preTravel", "^", "~");
+
+			// 	var arr = pInfo.split("^");
+
+			// 	//没有输入行程，或只填写一行，不计算人员费用。
+			// 	if (arr[1].trim().length < 1 || arr[2].trim().length < 1 || arr[3].trim().length < 8 || arr[4].trim().length < 8 ||
+			// 		arr.length < 16)
+			// 		return true;
+
+			// 	//取得住宿费计算方式
+			// 	var hotelWay = self.parent.banner.payTravelSet_a.hotel;
+			// 	//取得是否按自然天计算住宿费标识
+			// 	var hotelDays = self.parent.banner.payTravelSet_a.days;
+
+			// 	for (var i = 0; i < arr.length - 8; i = i + 8) { //最后一行为返回行程地点，不计入差旅费用。
+
+			// 		arr[i + 6] = (arr[i + 6].trim().length < 1) ? "0" : arr[i + 6];
+
+			// 		amt = arr[i + 6];
+
+			// 		//出差地点自然天数。离开这个地点日期减去出发到(不一定到，有的第一天出发，第二天到)这个地点日期。
+			// 		nDays = pubUtilGetDateInterDays(arr[i + 1], arr[i + 9]);
+
+			// 		if (i == arr.length - 16) { //循环最后一行.交通费加上返回行程交通费。
+
+			// 			arr[i + 14] = (arr[i + 14].trim().length < 1) ? "0" : arr[i + 14];
+			// 			amt = "" + (parseFloat(arr[i + 6]) + parseFloat(arr[i + 14]));
+			// 			nDays = pubUtilGetDateInterDays(arr[i + 1], arr[i + 10]); //返回当天计一天出差
+			// 		}
+
+			// 		//出差地点住宿天数。离开这个地点日期减去到达这个地点日期。
+			// 		//如果出差住宿天数按自然天计算，则赋值自然天数。第一天不增加，因为后台第一天增加1天。
+			// 		days = (hotelDays == "Y") ? nDays : pubUtilGetDateInterDays(arr[i + 2], arr[i + 9]);
+
+			// 		//自然天数，出差第一天也计算一天
+			// 		if (i == 0)
+			// 			nDays++;
+
+			// 		/*
+			// 		if(i==0)//出差第一天加1，解决：当天往返，有补助；多天出差，出发与返回当天都计算补助。
+			// 		  days++;
+			// 		*/
+
+			// 		tem = arr[i + 4].split("~"); //地点
+			// 		tem1 = arr[i + 5].split("~"); //交通方式
+
+			// 		//住宿天数(两个地点间隔天数)、出差地点代码、城市间交通费、交通方式、出差天数(包括非当天到达天数)
+			// 		perIds += "|" + days + "^" + tem[0] + "^" + amt + "^" + tem1[0] + "^" + nDays;
+
+			// 	}
+
+
+
+			// 	perIds = hotelWay + "^" + hotelDays + "|" + perIds;
+
+			// 	//perIds = hotelWay+"|"+perIds;
+
+			// 	var perAmt = toServerOp("PerAmt", perIds);
+
+			// 	//计算总金额，显示到主信息
+			// 	var arrAmt = perAmt.split("^");
+			// 	for (var i = 0; i < arrAmt.length; i = i + 8)
+			// 		n += parseFloat(arrAmt[i + 7]);
+
+			// 	document.getElementById('planAmt').value = n.toFixed(2);
+
+			// 	//取得出发日期、返回日期，显示到主信息
+			// 	document.getElementById('startDateId').value = arr[1];
+			// 	document.getElementById('endDateId').value = arr[arr.length - 6];
+
+			// 	//显示费用信息
+			// 	flyFormDataPageShowData("perAmt", perAmt, "E", "^", "~");
+
+			// 	//将计算出的标准金额，设置到表单的flyvalue，修改时，校验是否超过标准。
+			// 	setStandard();
+
+			// 	//点击计算时，指标金额清零，以免再次计算，指标金额翻倍。
+			// 	flyEditPageSetIndexZero();
+
+			// 	//赋值指标使用金额
+			// 	flyEditPageSetIndexUse(n);
+
+			// 	return true;
+			// }
+			/**
+			 * 差旅费用计算结果展示
+			 * @param showData  选择返回指标信息数组
+			 * @return
+			 */
+			// function travelCostShow(showData) {
+
+			// 	document.getElementById("jisuan").onclick = function() {
+			// 		var containers = this.parentElement.getElementsByClassName("container");
+			// 		for (var i = containers.length - 1; i >= 0; i--) {
+			// 			containers[i].remove();
+			// 		}
+
+			// 		var element = document.getElementById("fixed2").parentElement.parentElement.parentElement.children;
+			// 		var jiaotongMoney = 0;
+			// 		for (var i = 0; i < element.length - 1; i++) {
+			// 			jiaotongMoney += parseFloat(element[i].firstElementChild.firstElementChild.firstElementChild.lastElementChild.textContent
+			// 				.substring(1));
+			// 		}
+			// 		var chuchaipeople = document.getElementById("chuchaipeople").value;
+			// 		var peoples = chuchaipeople.split(" ");
+			// 		var tian = 2;
+			// 		var dengji = "副科级"
+			// 		var money = [100, 50, 50];
+			// 		for (var i = 0; i < peoples.length; i++) {
+			// 			if (peoples[i] == "曹雨虹") {
+			// 				dengji = "科级"
+			// 				money = [130, 60, 60];
+			// 			} else if (peoples[i] == "张楠") {
+			// 				dengji = "处级"
+			// 				money = [150, 70, 70];
+			// 			} else {
+			// 				dengji = "副科级";
+			// 				money = [100, 50, 50];
+			// 			}
+
+			// 			var tkvalStr = peoples[i] + "|" + dengji + "|" + jiaotongMoney + "|" + money[0] * tian + "|" + money[1] * tian +
+			// 				"|" + money[2] * tian + "|" + "0";
+			// 			var newContainer = document.createElement("div");
+			// 			newContainer.classList.add('container');
+			// 			newContainer.innerHTML = "<div class=\"item\" data-status='0'><div class=\"content\" tkvalue='" + tkvalStr +
+			// 				"'>" +
+			// 				"<div class=\"apply-third-div\"><span class=\"wd-60\">曹雨虹(科级)" +
+			// 				"</span><span class=\"cl-e0d jt-end\">￥1000</span></div><div class=\"apply-third-div\">" +
+			// 				"<span class=\"cl-0089D0 ta-lt\">2<span class=\"cl-afa-span\">(天)</span></span>" +
+			// 				"<span class=\"cl-0089D0\">400<span class=\"cl-afa-span\">(基本费用)</span></span>" +
+			// 				"<span class=\"cl-0089D0 jt-end\">100<span class=\"cl-afa-span\">(其他)</span></span>" +
+			// 				"</div></div><div class=\"button-group\"><button class=\"del-btn\">删除</button></div></div>";
+			// 			var parent = document.getElementById("jisuan");
+			// 			parent.parentNode.insertBefore(newContainer, parent)
+			// 			addSlideDelete(newContainer.getElementsByClassName("item")[0]);
+			// 			itemOnclick(newContainer.getElementsByClassName("item")[0]);
+			// 			itemDelete(newContainer.getElementsByClassName("del-btn")[0]);
+			// 		}
+			// 	}
+			// }
+			/**
+		         * 将计算出的标准金额，设置到表单的flyvalue，修改时，校验是否超过标准。
+		         标准：1、住宿；2、伙食补助；3、交通补助
+		
+		         * @return
+		         */
+			// function setStandard() {
+
+			// 	var inputObj = "";
+
+			// 	//1、设置住宿标准
+			// 	var tableObj = document.getElementById("perAmtTableId");
+
+			// 	for (var i = 1; i < tableObj.rows.length; i++) {
+
+			// 		inputObj = tableObj.rows[i].cells[4].getElementsByTagName("input")[0];
+			// 		inputObj.setAttribute("flyvalue", inputObj.value);
+
+			// 		inputObj = tableObj.rows[i].cells[5].getElementsByTagName("input")[0];
+			// 		inputObj.setAttribute("flyvalue", inputObj.value);
+
+			// 		inputObj = tableObj.rows[i].cells[6].getElementsByTagName("input")[0];
+			// 		inputObj.setAttribute("flyvalue", inputObj.value);
+			// 	}
+			// 	return;
+			// }
+			/**
+			 * 根据行程计算出差人员住宿、交通补助、伙食补助
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			// function repeatCount() {
+
+			// 	var tem = new Array();
+			// 	var flyvalue = "";
+			// 	var perIds = "";
+
+			// 	//var perIds = "'"+document.getElementById("personSelId").value+"'";
+
+			// 	var labels = document.getElementById('togetherId').getElementsByTagName("label");
+
+			// 	if (labels.length < 1) {
+
+			// 		alert("请选择出差人员");
+			// 		return;
+			// 	}
+
+			// 	for (var i = 0; i < labels.length; i++) {
+
+			// 		flyvalue = labels[i].getAttribute("flyvalue");
+			// 		tem = flyvalue.split("⌒");
+			// 		perIds += ",'" + tem[2] + "'";
+
+			// 	}
+
+			// 	perAmtCount(perIds.substring(1));
+
+			// 	return;
+			// }
+
+
+			/**
+			 * 在预计费用中，修改住宿、伙食补助、交通补助时，自动合计该人员金额，显示于合计处，同时计算基本信息计划金额，并显示到计划金额处。
+			 * @param obj  修改金额的input对象
+			 * @return  pubAmtId
+			 */
+			// function countAmt(obj) {
+
+			// 	//alert(obj.value+" ; "+obj.defaultValue); mType
+
+			// 	if (obj.value == obj.defaultValue)
+			// 		return;
+
+			// 	//修改金额
+			// 	var amt = (obj.value.trim().length < 1) ? 0 : parseFloat(obj.value.trim());
+
+			// 	//原来金额
+			// 	var defaultAmt = (obj.defaultValue.trim().length < 1) ? 0 : parseFloat(obj.defaultValue.trim());
+
+			// 	//校验输入金额是否大于标准
+			// 	var f = obj.getAttribute("flyvalue");
+
+			// 	if (f && f.trim().length > 0) {
+
+			// 		var s = parseFloat(f);
+
+			// 		if ((amt - s) > 0.01) {
+			// 			obj.value = defaultAmt;
+			// 			alert("抱歉，输入金额大于标准金额，请重新输入。");
+			// 			return;
+			// 		}
+			// 	}
+
+			// 	//总金额
+			// 	var totalObj = document.getElementById("planAmt");
+			// 	var total = (totalObj.value.trim().length < 1) ? 0 : parseFloat(totalObj.value.trim());
+
+			// 	//人员合计金额
+			// 	var trObj = obj.parentNode.parentNode;
+			// 	var inputObj = trObj.cells[trObj.cells.length - 1].getElementsByTagName("input")[0];
+			// 	var sum = (inputObj.value.trim().length < 1) ? 0 : parseFloat(inputObj.value.trim());
+
+			// 	//计算合计和总计
+			// 	inputObj.value = Math.round((sum + amt - defaultAmt) * 100) / 100;
+			// 	totalObj.value = Math.round((total + amt - defaultAmt) * 100) / 100;
+
+			// 	//赋值指标使用金额
+			// 	flyEditPageSetIndexUse(amt - defaultAmt);
+
+			// 	return;
+			// }
+			/**
+			 * 预算指标区域，选择指标回调函数
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return repeatCount
+			 */
+			function indexSet(selArr, obj) {
+
+				obj.value = selArr[4];
+				obj.setAttribute("flyvalue", selArr[0] + "~" + selArr[1]);
+
+				document.getElementById("indic_amt").value = selArr[2];
+				document.getElementById("indic_balance").value = selArr[3];
+				// trObj.cells[n+1].getElementsByTagName("input")[0].value = selArr[2];
+				// trObj.cells[n+2].getElementsByTagName("input")[0].value = selArr[3];
+
+				return;
+
+			}
+			/**
+			 * 预算指标区域，用户输入本次使用金额，判断是否超出可用金额。如果超出，提示并恢复为原来金额。
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function inputIndexAmtCheck(obj) {
+
+				//取得可用指标金额
+				var trObj = obj.parentNode.parentNode;
+				var n = obj.parentNode.cellIndex;
+				var e = parseFloat(trObj.cells[n - 1].getElementsByTagName("input")[0].value);
+
+				var v = (obj.value.trim().length < 1) ? 0 : parseFloat(obj.value);
+
+				if (v > e) {
+
+					alert("使用金额大于可用金额，请重新输入。");
+					obj.value = obj.defaultValue;
+
+					return;
+				}
+			}
+
+			/**
+			 * 支出事项选择回调函数。
+			 置入信息： 同时设置支出标准金额。
+			 * @param arr  选择返回指标信息数组
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function payStandardSet(selArr, obj) {
+				//selArr:p_code,p_name,p_desc,p_amt
+
+				var trObj = obj.parentNode.parentNode;
+				var n = obj.parentNode.cellIndex;
+
+				obj.value = selArr[1];
+				obj.setAttribute("flyvalue", selArr[0]);
+
+				document.getElementById("payStandard_info").value = selArr[2];
+				document.getElementById("payStandard_money").value = selArr[3];
+
+				// trObj.cells[n].getElementsByTagName("input")[0].setAttribute("flyvalue",selArr[0]);
+				// trObj.cells[n].getElementsByTagName("input")[0].value = selArr[1];
+				//
+				// trObj.cells[n+1].getElementsByTagName("input")[0].value = selArr[2];
+				// trObj.cells[n+2].getElementsByTagName("input")[0].value = selArr[3];
+				// trObj.cells[n+2].getElementsByTagName("input")[0].readOnly = true;
+
+				return;
+			}
+			/**
+			 * 上传附件，调用pubToolsUploadFileAsyn(obj,fileKey,showObj)方法
+			 * @param obj  选择表单对象
+			 * @ return
+			 */
+			function uploadFile(obj) {
+
+				var fileKey = document.getElementById('billId').value;
+
+				var showObj = document.getElementById('attchFiles');
+
+				pubToolsUploadFileAsyn(obj, fileKey, showObj, "/fwis/mssl/payMeetingApplySrv");
+
+				return;
+			}
+
+			/**
+			 * 改变部门时，改变人员下拉列表为改变后部门的人员
+			 * @param obj  选择表单对象
+			 * @return
+			 */
+			function changeDept(obj) {
+
+				var deptSelId = obj.id;
+				var personSelId = "";
+
+				if (deptSelId == "deptSelId")
+					personSelId = "personSelId";
+				else if (deptSelId == "officalDeptSelId")
+					personSelId = "officalPersonSelId";
+
+				// var personObj = document.getElementById(personSelId);
+				// personObj.options.length = 0;
+
+				//生成部门所有人员下拉列表
+				commonSelectAppSelectInit("personNewSel", obj.value, "", personSelId, "");
+			}
+			/**
+		         * 新增、复制时进入页面：
+		         1、从后台取得自动生成的申请单号、登录人部门、姓名。
+		         2、生成人员下拉列表。
+		         3、设置默认申请部门、申请人员为登录人员
+		
+		         * @return
+		         */
+			function setInitInfo(dateKey) {
+
+				if (flyEditPageGetFlag() == "Add" || flyEditPageGetFlag() == "Copy") {
+
+					var billInfo = toServerOp("AddBillInfo", dateKey);
+
+					//billInfo格式：billId|deptId|personId
+					var arr = billInfo.split("|");
+
+					//设置申请单号
+					document.getElementById("billId").value = arr[0];
+
+					// //设置申请部门为登录人部门
+					// var deptObj = document.getElementById("deptSelIdName");
+					// deptObj.value = arr[1];
+
+					//生成登录人部门所有人员下拉列表(根据登录人部门代码生成)。
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[1], "", "personSelId", loginPerId_a, ""); //人员下拉列表
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[1], "", "officalPersonSelId", loginPerId_a, ""); //人员下拉列表
+					// //设置登录人为申请人
+					// var perObj = document.getElementById("personSelIdName");
+					// perObj.value = arr[2];
+
+					//设置申请人为出差人
+					// var deptName = deptObj.options[deptObj.selectedIndex].text;
+					// var perName = perObj.options[perObj.selectedIndex].text;
+
+					var deptName = document.getElementById("deptSelIdName").value;
+					var perName = document.getElementById("personSelIdName").value;
+
+					var perArr = [
+						[arr[1], deptName, arr[2], perName]
+					];
+					var obj = document.getElementById('togetherId');
+
+					commonSelectSetSelArrLabel(perArr, obj);
+
+				} else if (flyEditPageGetFlag() == "Upd") {
+
+					var billInfo = toServerOp("UpdBillInfo", dateKey);
+
+					//billInfo格式：deptId|personId
+					var arr = billInfo.split("|");
+					
+					//生成登录人部门所有人员下拉列表(根据登录人部门代码生成)。
+					commonSelectAppSelectInit("personNewSel", loginInsId_a + "|" + arr[0], "", "personSelId", arr[1], ""); //人员下拉列表
+
+					document.getElementById("finalMoneyData").innerText = document.getElementById("planAmt").value;
+					//设置申请人为登录人
+					// document.getElementById("personSelIdName").value = arr[1];
+
+				}
+				return;
+			}
+
+			function init() {
+				//取得登录单位
+				loginInsId_a = getGlobleInsId();
+
+				//取得登录部门
+				loginDeptId_a = getGlobleDeptId();
+
+				//取得登录人员
+				loginPerId_a = getGloblePerId();
+
+				//取得出差申请行程是否必输标志,Y必输
+				var hotelWay = getGloblePayTravelApp();
+
+				if (hotelWay == "Y") {
+
+					// var obj = document.getElementById("planAmt");
+					// obj.style.cssText = "background-color:#fafafa;text-align:right;";
+					// obj.readOnly = true;
+				}
+
+				//根据设置，确定指标为申请人输入，还是特定岗位输入。
+				flyEditPageSetIndexArea();
+
+				flyEditPageSetApp("Y"); //设置页面需要审批
+				flyEditPageSetEditObjId("editForm"); //设置页面编辑显示区域id
+
+				commonSelectAppSelectInit("deptSel", loginInsId_a, "", "deptSelId", loginDeptId_a, ""); //部门下拉列表
+				commonSelectAppSelectInit("deptSel", loginInsId_a, "", "officalDeptSelId", loginDeptId_a, ""); //部门下拉列表
+				commonSelectAppStaticSelectInit("designated");
+
+				//初始化页面参数
+				flyEditPageGetParam();
+
+				setInitInfo(flyEditPageGetUpdKey()); //设置申请单号、申请人部门、名称
+
+				pubToolsImgSelEventAdd("cun", "ab1");
+			}
+		</script>
+	</head>
+
+	<body onLoad="init()">
+		<div class="box">
+			<div id="editForm" class="apply">
+				<div class="h-70">
+					<a href="../mainpage.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+					<span class="ft-35">会议申请</span>
+					<span></span>
+				</div>
+
+				<div class="apply-first">
+					<div class="h-120">
+						<span><label flyflag='3' class="flyListPageStarLabel">*</label>申请单号</span>
+						<input id='billId' type="text" flyflag='0'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span><label flyflag='3' class="flyListPageStarLabel">*</label>事项名称</span>
+						<input id='billName' type="text" flyflag='0' necessary='1' onblur='neceCheck(this)' maxlength='50' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>申请部门</span>
+						<input type="text" flyflag='2' id="deptSelIdName" onchange="changeDept(this);" readonly>
+						<div class="ab">
+							<div class="nav" id="deptSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>申&nbsp;请&nbsp;人</span>
+						<input type="text" flyflag='2' id="personSelIdName" readonly>
+						<div class="ab">
+							<div class="nav" id="personSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<input type="text" flyflag='0' value="" style="display:none;">
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+						<input type="text" flyflag='2' onclick="getSel(this,'I')" readonly>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span>开始日期</span>
+						<input id="date-group-1" type="text" flyflag="0" class="wd-60" onclick="pubToolsDateSel(this);" readonly>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120">
+						<span>结束日期</span>
+						<input id="date-group1-2" type="text" flyflag="0" class="wd-60" onclick="pubToolsDateSel(this);" readonly>
+						<span class="iconfont icon-z043"></span>
+					</div>
+
+					<input id="planAmt" type="text" flyflag='0' value="0" style="display:none;">
+					<input type="text" flyflag='0' value="0" style="display:none;">
+
+					<div class="h-120">
+						<span>会议名称</span>
+						<input type="text" flyflag='0' maxlength='100' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>参加人数</span>
+						<input type="text" flyflag='0' onkeyup="flyCheckDigitInput(this,'I');">
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>会议地点</span>
+						<input type="text" flyflag='0' maxlength='100' onkeyup='flyCheckStrInput(this);' VALUE=''>
+						<span></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>是否定点</span>
+						<input type="text" flyflag='2' readonly>
+						<div class="ab">
+							<div class='nav' id="designated">
+								<div flyvalue='N'>否</div>
+								<div flyvalue='Y'>是</div>
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+
+					<div class="h-120">
+						<span>非定点说明</span>
+						<input type="text" flyflag='0' maxlength='200' onkeyup='flyCheckStrInput(this);'>
+						<span></span>
+					</div>
+
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>主办部门</span>
+						<input type="text" flyflag='2' id="officalDeptSelIdName" onchange="changeDept(this);" readonly>
+						<div class="ab">
+							<div class="nav" id="officalDeptSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+					<div class="h-120 tanchuang" onclick="openSelectWindows(this)">
+						<span>负&nbsp;责&nbsp;人</span>
+						<input type="text" flyflag='2' id="officalPersonSelIdName" readonly>
+						<div class="ab">
+							<div class="nav" id="officalPersonSelId">
+
+							</div>
+						</div>
+						<span class="iconfont icon-z043"></span>
+					</div>
+
+					<div class="h-120">
+						<span>工作人员</span>
+						<span id="togetherId" flyflag='4' onclick="getSel(this,'P')"> </span>
+						<span></span>
+					</div>
+					<div class="h-120">
+						<span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</span>
+						<input type="text" flyflag='0' maxlength="200" onkeyup="flyCheckStrInput(this);">
+						<span></span>
+					</div>
+				</div>
+
+				<div class="wd-100 bd-ef pd-20">
+					<div class="father">
+						<div class="add-img" flyflag="4">
+							<img src="../img/jiahao.png" class="cun" id="cun">
+						</div>
+					</div>
+					<div class="ab1" id="ab1">
+						<div class="nav1" id="nav1">
+							<div class="tu">
+								<span>选择图片</span>
+								<section class="z_file fl">
+									<input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp"
+									 multiple />
+								</section>
+							</div>
+							<div class="pai">
+								<span>拍照</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<div class="pai">
+								<span>扫码</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<div class="pai">
+								<span>连续扫码</span>
+								<input type="file" capture="camera" accept="image/*">
+							</div>
+							<p class="quxiao">取消</p>
+						</div>
+					</div>
+				</div>
+
+				<!--
+				<div class="mt-20 h-80 center">
+					<span class="mb-10 cs-pt cl-e65">添加相关附件</span>
+				</div>
+
+				<div class="mt-20 h-80 center">
+					<span class="mb-10 cs-pt cl-e65">上级政策</span>
+				</div>
+
+				<div class="mt-20 h-80 center">
+					<span class="mb-10 cs-pt cl-e65">会议计划</span>
+				</div>
+
+				<div class="mt-20 h-80 center">
+					<span class="mb-10 cs-pt cl-e65">会议绩效</span>
+				</div>
+				-->
+
+				<!--指标区域-->
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<div id="indexTable" class="apply-fourth apply-space" flyindex="N" flyflag='18' flyset="6|0,2|3|0,1|1|2">
+					<div class="container" style="display:none">
+						<div class="item" data-status="0">
+							<div class="content" flyshow="9" flyflag='9' flyvalue="" onclick="windowShowDataInfo(this,0)">
+								<div class="apply-fourth-div">
+									<div>
+										<span class="wd-50" flyshow='0'></span>
+										<span class="wd-20 jt-end cl-e0d">￥<span flyshow='0'>500</span></span>
+									</div>
+									<div>
+										<span class="wd-10 ta-lt cl-0089D0"><span flyshow='0'>2020</span><span class="cl-afa-span">(年)</span></span>
+										<span class="wd-60 cl-0089D0"><span flyshow='0'>2000</span><span class="cl-afa-span">(总额)</span></span>
+										<span class="wd-60 cl-0089D0"><span flyshow='0'>1000</span><span class="cl-afa-span">(余额)</span></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="cs-pt cl-e65 zhibiao">
+						<span onclick="openWindowData(this)">指标预算</span>
+						<div class="none">
+							<div class="fixed fixed6" id="fixed-4">
+								<div class="lvcheng">
+									<div class="zhibiaoinfo">
+										<span>支出指标</span>
+										<input type="text" flyvalue="" class="wd-60" onclick="getSel(this,'D')" readonly>
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div>
+										<span>指标金额</span>
+										<input id="indic_amt" type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div>
+										<span>指标余额</span>
+										<input id="indic_balance" type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div>
+										<span>支出金额</span>
+										<input type="text" class="wd-60" onfocus="this.defaultValue = this.value;" onkeyup="flyCheckDigitInput(this,'D');">
+										<span></span>
+									</div>
+									<div>
+										<span>对应支出项</span>
+										<input type="text" class="wd-60" maxlength="100" onkeyup="flyCheckStrInput(this);">
+										<span></span>
+									</div>
+									<div>
+										<span>备注</span>
+										<input type="text" class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span  onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+
+				<div id="detailTable" class="apply-third apply-space applyLastDiv" flyflag='18' flyset="9|1,1|6|3|4|5">
+					<!--            々1^ps100000027~资料费^不得超越^100^90^1^90^^々-->
+					<div class="container" style="display: none">
+						<div class="item" data-status="0">
+							<div class="content" flyshow="9" flyflag="9" flyvalue="" onclick="windowShowDataInfo(this,1)">
+								<div class="apply-third-div">
+									<span class="wd-60" flyshow="0"></span>
+									<span class="cl-e0d">￥<span flyshow="0"></span></span>
+								</div>
+								<div class="apply-third-div">
+									<span class=" wd-60 ta-lt cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(标准金额)</span>
+									</span><span class="wd-60 cl-0089D0"><span flyshow="0">50</span><span class="cl-afa-span">(单价)</span></span>
+									<span class="wd-60 cl-0089D0 ta-rt"><span flyshow="0">10</span><span class="cl-afa-span">(数量)</span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="cl-e65 cs-pt baoxiaodetail apply-third-last">
+						<span onclick="openWindowData(this)">会议支出事项</span>
+						<div class="none">
+							<div class="fixed fixed1" id="fixed-1">
+								<div class="lvcheng yin">
+									<div class="baoxiaozhichu">
+										<span>支出事项</span>
+										<!--                                onclick="getSel(this,'S')"-->
+										<input type="text" flyvalue="" class="wd-60" onclick="getSel(this,'S')" readonly>
+
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div>
+										<span>说明</span>
+										<input id="payStandard_info" type="text" readonly class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>标准</span>
+										<input id="payStandard_money" type="text" readonly class="wd-60">
+										<span></span>
+									</div>
+									<div>
+										<span>单价</span>
+										<input type="text" class="wd-60" onblur="payMoneyCalcuFun(this,3,4,5,'*')" onfocus="this.defaultValue = this.value;"
+										 onkeyup="flyCheckDigitInput(this,'D');">
+										<span></span>
+									</div>
+									<div>
+										<span>数量</span>
+										<!--                                onblur="inputIndexAmtCheck(this)"-->
+										<input type="text" class="wd-60" onblur="payMoneyCalcuFun(this,3,4,5,'*')" onfocus="this.defaultValue = this.value;"
+										 onkeyup="flyCheckDigitInput(this,'I');">
+										<span></span>
+									</div>
+									<div>
+										<span>合计</span>
+										<input type="text" class="wd-60" readonly>
+										<span></span>
+									</div>
+									<div class="shijian1">
+										<span>日期</span>
+										<input id="date-group1-3" class="wd-60" type="text" onclick="pubToolsDateSel(this);" readonly>
+										<span class="iconfont icon-z043 wd-10"></span>
+									</div>
+									<div>
+										<span>地点</span>
+										<input type="text" class="wd-60" maxlength='50' onkeyup='flyCheckStrInput(this);'>
+										<span></span>
+									</div>
+									<div>
+										<span  onclick="windowClose(this)">取消</span>
+										<span onclick="infoConfirm(this,'','O')">确认继续</span>
+										<span onclick="infoConfirm(this,'addNumInfo','C')">确认</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<input type="text" flyflag='7' flyvalue="々" style="display:none;">
+				<input type="text" flyflag='0' style="display:none;">
+				<!--按钮区域-->
+				<div class="apply-footer">
+					<div class="moneyFinal">
+						<span class="cl-afa">合计：</span>
+						<span class="cl-e0d" id="finalMoneyData">0</span>
+					</div>
+					<div id="footerSaveButton" class="footerSave">
+						<a href="#" onClick="flyEditPageAddSave();">保存</a>
+					</div>
+					<div class="footerSA">
+						<a href="#" onClick="flyEditPageSaveApprove();">保存审批</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="../js/common.js"></script>

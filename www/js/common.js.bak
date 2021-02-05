@@ -1,0 +1,361 @@
+
+//存在取消按钮弹窗
+var tanchuangClass = document.querySelectorAll(".tanchuang");//弹框展示
+tanchuangClass.forEach(element => {
+    element.addEventListener('click', function (e) {
+        element.lastElementChild.previousElementSibling.style.display="block";
+        element.lastElementChild.previousElementSibling.firstElementChild.style.display="block";
+    })
+})
+/*
+var quxiaoClass = document.querySelectorAll(".quxiao");//点击取消
+quxiaoClass.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.style.display="none";
+        element.parentElement.parentElement.style.display="none";
+    })
+})
+
+
+var divText = document.querySelectorAll(".nav div");//方式转换
+divText.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        //element.parentElement.parentElement.previousElementSibling.textContent=this.textContent;
+        element.parentElement.parentElement.previousElementSibling.value=this.textContent;
+        element.parentElement.style.display="none";
+        element.parentElement.parentElement.style.display="none";
+    })
+})
+*/
+var abClass = document.querySelectorAll(".ab");//点击阴影
+abClass.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.style.display="none";
+        element.firstElementChild.style.display="none";
+    })
+})
+
+var divYinText = document.querySelectorAll(".yin .nav div");//方式转换
+divYinText.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.previousElementSibling.textContent=this.getAttribute("name");
+        element.parentElement.style.display="none";
+        element.parentElement.parentElement.style.display="none";
+    })
+})
+
+//存在确认和取消按钮的相关弹窗
+var twoButton = document.querySelectorAll(".sp-ct,.cc-fangshi");//弹框展示
+twoButton.forEach(element => {
+    element.addEventListener('click', function (e) {
+        element.nextElementSibling.style.display = "block";
+        element.nextElementSibling.firstElementChild.style.display = "block";
+    })
+})
+
+var fangshiText = document.querySelectorAll(".fangshi>div");//方式转换
+fangshiText.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.previousElementSibling.textContent=element.textContent;
+        fangshiText.forEach(ele => {
+            ele.style.backgroundColor = "#fff";
+        })
+        element.style.backgroundColor = "#efefef";
+    })
+})
+
+var zhibiaoFangshiText = document.querySelectorAll(".zhibiaoinfo .fangshi>div");//方式转换
+zhibiaoFangshiText.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.previousElementSibling.textContent = element.getAttribute("name");
+        element.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("guikou");
+        element.parentElement.parentElement.parentElement.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("year");
+        element.parentElement.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("money");
+        element.parentElement.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("yue");
+
+        zhibiaoFangshiText.forEach(ele => {
+            ele.style.backgroundColor = "#fff";
+        })
+        element.style.backgroundColor = "#efefef";
+    })
+})
+
+var baoxiaoFangshiText = document.querySelectorAll(".baoxiaozhichu .fangshi>div");//方式转换
+baoxiaoFangshiText.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.previousElementSibling.textContent = element.getAttribute("name");
+        element.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("info");
+        element.parentElement.parentElement.parentElement.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.value = element.getAttribute("biaozhun");
+
+        baoxiaoFangshiText.forEach(ele => {
+            ele.style.backgroundColor = "#fff";
+        })
+        element.style.backgroundColor = "#efefef";
+    })
+})
+
+var querenButton = document.querySelectorAll(".fangshi-queren,.fangshi-quxiao");//点击确认和取消
+querenButton.forEach(element => {
+    element.addEventListener('click', function (e) {
+        element.parentElement.parentElement.style.display="none";
+        element.parentElement.parentElement.parentElement.style.display="none";
+    })
+})
+
+var hcClass = document.querySelectorAll(".hc"); //点击阴影部分
+hcClass.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.style.display="none";
+        element.firstElementChild.style.display="none";
+    })
+})
+
+var lvchengquxiaoClass = document.querySelectorAll(".lvcheng-quxiao");//点击取消
+lvchengquxiaoClass.forEach(element => {
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.parentElement.style.display="none";
+    })
+})
+
+
+/**
+ *  拼接弹框属性值
+ * @param element      清单父级元素
+ */
+function tkValueFun(element) {
+
+    var tkValueStr = "";
+    for(var i = 0;i < element.length-1 ; i++){
+        var textElement = element[i].firstElementChild.nextElementSibling;
+        var tagNameLower =textElement.tagName.toLowerCase();
+        if(tagNameLower == "input"){
+            tkValueStr += textElement.value+"|";
+        }else if(tagNameLower == "span"){
+            tkValueStr += textElement.textContent+"|";
+        }
+    }
+    tkValueStr = tkValueStr.substring(0,tkValueStr.length-1);
+
+    return tkValueStr;
+}
+
+
+/**
+ *  确认时追加元素内容
+ * @param element      清单父级元素
+ * @param innerHtml      生成元素html
+ * @param id      追加元素的参考位置
+ */
+function tkContainerFun(element,innerHtml,idName,e){
+
+    var newContainer = document.createElement("div");
+    newContainer.classList.add('container');
+    newContainer.innerHTML = innerHtml;
+
+    var parent = document.getElementById(idName);
+    parent.parentNode.insertBefore(newContainer,parent)
+
+    e.cancelBubble = true;
+    e.stopPropagation();
+
+    addSlideDelete(newContainer.getElementsByClassName("item")[0]);
+    itemOnclick(newContainer.getElementsByClassName("item")[0].firstElementChild);
+    itemDelete(newContainer.getElementsByClassName("del-btn")[0]);
+}
+
+
+/**
+ *  item元素滑动
+ * @param divObj      滑动div对象
+ */
+function addSlideDelete(divObj){
+
+    let touchStart, touchEnd;
+
+    // 滑动开始, 记录开始位置
+    divObj.addEventListener('touchstart', function (e) {
+        touchStart = e.touches[0].clientX;
+    })
+
+    // 滑动结束
+    divObj.addEventListener('touchend', function (e) {
+
+        let currentEle = e.currentTarget
+
+        touchEnd = e.changedTouches[0].clientX
+
+        // 向左滑, 显示删除按钮
+        if (currentEle.dataset.status === '0' && touchEnd - touchStart < -30) {
+            currentEle.dataset.status = 1
+            currentEle.classList.add('active')
+            document.body.onclick=function(e){
+                console.log(e)
+                e.stopPropagation()
+                if (e.target.className == "del-btn") {
+
+                } else {
+                    currentEle.dataset.status = 0
+                    currentEle.classList.remove('active')
+                }
+            }
+        }
+
+        // 向右滑, 隐藏删除按钮
+        if (currentEle.dataset.status === '1' && touchEnd - touchStart > 30) {
+            currentEle.dataset.status = 0
+            currentEle.classList.remove('active')
+        }
+    })
+
+}
+
+/**
+ *  item元素删除
+ * @param itemClick     item单机事件
+ */
+function itemOnclick(itemClick) {
+    itemClick.addEventListener('click', function (e) {
+        var tkValueStr = itemClick.getAttribute("tkvalue"); //获取值
+        var tkValue = tkValueStr.split("|"); //拆分值
+
+        var parentElement = itemClick.parentElement.parentElement.parentElement.lastElementChild.firstElementChild.nextElementSibling;
+        parentElement.style.display="block";
+        parentElement.firstElementChild.style.display="block";
+
+        var divList = parentElement.firstElementChild.firstElementChild.children;
+        for(var i = 0;i < divList.length-1 ; i++){
+            var textElement = divList[i].firstElementChild.nextElementSibling;
+            var tagNameLower =textElement.tagName.toLowerCase();
+            if(tagNameLower == "input"){
+                textElement.value = tkValue[i];
+            }else if(tagNameLower == "span"){
+                textElement.textContent = tkValue[i];
+            }
+        }
+
+    })
+}
+
+/**
+ *  item元素单机修改
+ * @param itemClick     item删除事件
+ */
+function itemDelete(itemClick) {
+
+    itemClick.addEventListener('click', function (e) {
+        itemClick.parentElement.parentElement.parentElement.remove();
+    })
+
+}
+
+// 滑块
+const items = document.querySelectorAll('.item')
+items.forEach(item => {
+    let touchStart, touchEnd,  click
+    // 滑动开始, 记录开始位置
+    item.addEventListener('touchstart', function (e) {
+        touchStart = e.touches[0].clientX
+    })
+    // 滑动结束
+    item.addEventListener('touchend', function (e) {
+        let currentEle = e.currentTarget
+        touchEnd = e.changedTouches[0].clientX
+        // 向左滑, 显示删除按钮
+        if (currentEle.dataset.status === '0' && touchEnd - touchStart < -30) {
+            currentEle.dataset.status = 1
+            currentEle.classList.add('active')
+            document.body.onclick=function(e){
+                console.log(e)
+                e.stopPropagation()
+                if (e.target.className == "del-btn") {
+
+                } else {
+                    currentEle.dataset.status = 0
+                    currentEle.classList.remove('active')
+                }
+            }
+        }
+        // 向右滑, 隐藏删除按钮
+        if (currentEle.dataset.status === '1' && touchEnd - touchStart > 30) {
+            currentEle.dataset.status = 0
+            currentEle.classList.remove('active')
+        }
+    })
+
+    //item修改
+    item.getElementsByClassName("content")[0].addEventListener('click',function (e) {
+        var tkValueStr = this.getAttribute("tkvalue"); //获取值
+        var tkValue = tkValueStr.split("|"); //拆分值
+
+        var parentElement = this.parentElement.parentElement.parentElement.lastElementChild.firstElementChild.nextElementSibling;
+        parentElement.style.display="block";
+        parentElement.firstElementChild.style.display="block";
+        var divList = parentElement.firstElementChild.firstElementChild.children;
+        for(var i = 0;i < divList.length-1 ; i++){
+            var textElement = divList[i].firstElementChild.nextElementSibling;
+            var tagNameLower =textElement.tagName.toLowerCase();
+            if(tagNameLower == "input"){
+                textElement.value = tkValue[i];
+            }else if(tagNameLower == "span"){
+                textElement.textContent = tkValue[i];
+            }
+        }
+    })
+})
+
+//滑块删除
+const btns = document.querySelectorAll('.del-btn')
+btns.forEach(btn => {
+    // 删除按钮点击事件
+    btn.addEventListener('click', function (e) {
+        btn.parentElement.parentElement.parentElement.remove();
+    })
+})
+
+function name() {
+    var closeUpimg = document.getElementsByClassName(".close-upimg");
+    for ( var i = 0; i < closeUpimg.length; i++) {
+        closeUpimg[i].index = i;
+        closeUpimg[i].onclick = function (e){
+            var upSection = document.getElementsByClassName(".up-section");
+            for ( var i = 0; i < upSection.length; i++) {
+                upSection[i].style.display="none";
+            }
+        }
+    }
+    document.querySelectorAll("[data-toggle=\"lightbox\"]").lightbox();
+    // $('.close-upimg').click(function () {
+    //     $('.up-section').hide()
+    // })
+    // $('[data-toggle="lightbox"]').lightbox();
+}
+
+/*  页面关闭    */
+var pageClose = document.querySelectorAll('.page-guanbi')
+pageClose.forEach(element => {
+    // 删除按钮点击事件
+    element.addEventListener('click', function (e) {
+        e.cancelBubble = true;
+        e.stopPropagation();
+        element.parentElement.parentElement.parentElement.style.display="none";
+    })
+})
+

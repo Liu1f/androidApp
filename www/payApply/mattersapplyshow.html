@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>事项申请展示</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/data.css">
+    <link rel="stylesheet" href="../css/zui.css">
+    <link href="../css/common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+<!--    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="../js/rem.js"></script>
+<!--    <script src="../js/jquery.rotate.min.js"></script>-->
+    <style>
+        .baoxiaodetail,.baoxiaoinfo,.zhifuxinxi,.zhibiao{
+            height: 0rem;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="box">
+        <div class="apply">
+            <div class="h-70">
+                <a href="./details.html"><span class="iconfont icon-jiantou ft-35"></span></a>
+                <span class="ft-35">事项申请展示</span>
+                <span></span>
+            </div>
+
+            <div class="apply-first">
+                <div class="h-120">
+                    <span>申请单号</span>
+                    <input type="text" value="CLF20190514001" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>事项名称</span>
+                    <input type="text" value="内控信息化产品采购" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>申请部门</span>
+                    <input type="text" value="警保处" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>申&nbsp;请&nbsp;人</span>
+                    <input type="text" value="曹雨虹" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>业务类别</span>
+                    <input type="text" value="办公设备购置申请" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>业务进度</span>
+                    <input type="text" value="采购中" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>采购类别</span>
+                    <input type="text" value="货物类采购" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>采购方式</span>
+                    <input type="text" value="公开招标采购" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>事&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由</span>
+                    <input type="text" value="内控填报" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</span>
+                    <input type="text" value="外出警务督察项目" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>开始时间</span>
+                    <input type="text" value="2020-06-02" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>结束时间</span>
+                    <input type="text" value="2020-06-04" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>预计费用</span>
+                    <input type="text" value="200000" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>主办部门</span>
+                    <input type="text" value="警保处" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>负责人</span>
+                    <input type="text" value="张辉" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>采购计划备案</span>
+                    <input type="text" value="需要备案" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>事项地点</span>
+                    <input type="text" value="0" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>单据状态</span>
+                    <input type="text" value="正常" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>审批状态</span>
+                    <button class="zhuangtai" id="zhuangtai">审批中</button>
+                    <span></span>
+                    <div class="hei" id="hei">
+                        <div class="examine" id="examine">
+                            <div class="examine-top">
+                                <div>
+                                    <div>
+                                        <img src="../img/shenpi.png" alt="">
+                                        <span>撤回</span>
+                                    </div>
+                                    <div>
+                                        <img src="../img/shenpi.png" alt="">
+                                        <span>退回</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>
+                                        <img src="../img/kefu.png" alt="">
+                                        <span>同意</span>
+                                    </div>
+                                    <img src="../img/guanbi.png" alt="" class="guanbi" id="zhuangtaiguanbi">
+                                </div>
+                            </div>
+                            <textarea name="" id="" cols="30" rows="10" class="tc-input" placeholder="请在此输入审核意见"></textarea>
+                            <div class="examine-center">
+                                <div class="examine-center-left">
+                                    <div>
+                                        <span>2020-09-01</span>
+                                        <span>16:50:00</span>
+                                        <div class="weipi"><span></span></div>
+                                    </div>
+                                    <div>
+                                        <span>2020-09-01</span>
+                                        <span>16:45:00</span>
+                                        <div class="weipi"><span></span></div>
+                                    </div>
+                                    <div>
+                                        <span>2020-09-01</span>
+                                        <span>12:05:00</span>
+                                        <div class="weitongguo"><span></span></div>
+                                    </div>
+                                    <div>
+                                        <span>2020-09-01</span>
+                                        <span>07:25:00</span>
+                                        <div class="yipi"><span></span></div>
+                                    </div>
+                                    <div>
+                                        <span>2020-09-01</span>
+                                        <span>05:35:00</span>
+                                        <div class="yipi"><span></span></div>
+                                    </div>
+                                </div>
+                                <div class="examine-center-right">
+                                    <div>
+                                        <span>马爽</span>
+                                    </div>
+                                    <div>
+                                        <span>马爽</span>
+                                    </div>
+                                    <div>
+                                        <span>张楠</span>
+                                        <span >审核未通过</span>
+                                    </div>
+                                    <div>
+                                        <span>曹雨虹</span>
+                                        <span>通过审核通过审核通过审核通过审核通过审核</span>
+                                    </div>
+                                    <div>
+                                        <span>曹雨虹</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-120">
+                    <span>录入人</span>
+                    <input type="text" value="曹雨虹" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>时间</span>
+                    <input type="text" value="2020-06-10 10:00:00" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>申请说明</span>
+                    <input type="text" value="" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>相关文件</span>
+                    <input type="text" value="" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>政策制度</span>
+                    <input type="text" value="" readonly>
+                    <span></span>
+                </div>
+                <div class="h-120">
+                    <span>事项照片</span>
+                    <input type="text" value="" readonly>
+                    <span></span>
+                </div>
+                <div class="details-img">
+                    <div class="quanzi-one">
+                        <div class="baguetteBoxOne gallery">
+                            <a href="../img/function_icon_d10.png" data-caption="1"><img src="../img/function_icon_d10.png"></a>
+                            <a href="../img/function_icon_d10.png" data-caption="2"><img src="../img/function_icon_d10.png"></a>
+                            <a href="../img/function_icon_d10.png" data-caption="3"><img src="../img/function_icon_d10.png"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply-fourth">
+                <div class="container">
+                    <div class="item" data-status='0' tkValue="指挥中心|100|办公经费|花销正常">
+                        <div class="content">
+                            <div class="apply-fourth-div">
+                                <div>
+                                    <span class="wd-50">指挥中心(办工经费)</span>
+                                    <span class="wd-20 jt-end cl-e0d">￥1000</span>
+                                </div>
+                                <div>
+                                    <span class="wd-30 ta-lt cl-0089D0">2020<span class="cl-afa-span">(年)</span></span>
+                                    <span class="wd-30 cl-0089D0">8000<span class="cl-afa-span">(总额)</span></span>
+                                    <span class="wd-40 cl-0089D0">1200<span class="cl-afa-span">(预算余额)</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cs-pt cl-e65 zhibiao" id="zhibiao">
+                    <span></span>
+                    <div class="none">
+                        <div class="fixed fixed6" id="fixed6">
+                            <div class="lvcheng">
+                                <div>
+                                    <span>支出指标</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支出部门</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>指标年份</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>指标金额</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>指标余额</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>支出金额</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>备注</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="apply-third">
+                <div class="container">
+                    <div class="item" data-status="0" tkvalue="办公物品采购|单价不可超过5000|5000|5000|10|10|2020-09-14|公务卡|||">
+                        <div class="content">
+                            <div class="apply-third-div">
+                                <span class="wd-60">办公物品采购</span>
+                                <span class="cl-e0d">￥50000</span>
+                            </div>
+                            <div class="apply-third-div">
+                                <span class="ta-lt cl-0089D0">5000<span class="cl-afa-span">(标准金额)</span></span>
+                                <span class="cl-0089D0">5000<span class="cl-afa-span">(单价)</span></span>
+                                <span class="cl-0089D0 ta-rt">10<span class="cl-afa-span">(数量)</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cl-e65 cs-pt baoxiaodetail apply-third-last" id="baoxiaodetail">
+                    <span></span>
+                    <div class="none">
+                        <div class="fixed fixed1" id="fixed-1">
+                            <div class="lvcheng yin">
+                                <div>
+                                    <span>支出事项</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>说明</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>标准</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>单价</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>数量</span>
+                                    <input type="text" readonly class="wd-50">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>地点</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>物品类别</span>
+                                    <input type="text" readonly class="wd-60">
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span class="page-yin"></span>
+                                    <span class="page-yin"></span>
+                                    <span class="page-guanbi">关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="apply-footer details-footer">
+
+<!--                <div class="shenpizhong">-->
+<!--                    <a href="#">新增</a>-->
+<!--                </div>-->
+
+                <div class="shenpiend">
+                    <div>
+                        <a href="#">新增</a>
+                    </div>
+                    <div>
+                        <a href="#">作废</a>
+                    </div>
+                </div>
+
+<!--                <div class="shenpistart">-->
+<!--                    <div>-->
+<!--                        <a href="#">新增</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a href="#">撤回审批</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="shengpibaocun">-->
+<!--                    <div>-->
+<!--                        <a href="#">新增</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a href="#">修改</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a href="#">发起审批</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="shengpichehui">-->
+<!--                    <div>-->
+<!--                        <a href="#">新增</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a href="#">修改</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a href="#">作废</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div>
+                       <a href="#">审批</a>
+                   </div>
+                   <div>
+                       <a href="#">修改</a>
+                   </div>
+                   <div>
+                       <a href="#">新增</a>
+                   </div>-->
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<!--<script src="../js/zui.js"></script>-->
+<!--<script src="../js/imgUp.js"></script>-->
+<script type="text/javascript" src="../js/rolldate.min.js"></script>
+
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/commonshow.js"></script>
+
+<script type="text/javascript">
+    // 时间选择器
+    window.onload = function () {
+        // 格式
+        new Rolldate({
+            el: '#date-group1-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-2',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-3',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        new Rolldate({
+            el: '#date-group1-4',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+        /* 回调函数
+         * tips:	在vue及其他mvvm框架中使用时，在confirm中修改v-model绑定的数据即可
+         */
+        new Rolldate({
+            el: '#date-group2-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                console.log('插件开始触发');
+            },
+            moveEnd: function (scroll) {
+                console.log(scroll)
+                console.log('滚动结束');
+            },
+            confirm: function (date) {
+                console.log(date)
+                console.log('确定按钮触发');
+            },
+            cancel: function () {
+                console.log('插件运行取消');
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-2',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            init: function () {
+                if (1 == 1) {
+                    console.log('阻止插件继续执行');
+                    return false;
+                }
+            }
+        })
+        new Rolldate({
+            el: '#date-group2-3',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                return date.replace(/-/g, '/');
+            }
+        })
+        // 自定义语言
+        var lang = {
+            title: '自定义标题',
+            cancel: '取消',
+            confirm: '确认',
+            year: '年',
+            month: '月',
+            day: '日',
+            hour: '时',
+            min: '分',
+            sec: '秒'
+        };
+        // 如果某个值未修改可不传 以上同 var lang = {title:'自定义标题'} 允许传空串
+        new Rolldate({
+            el: '#date-group3-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            lang: lang
+        })
+
+        // 设置默认日期 内部使用document.getElementById('date').bindDate = new Date('2019/05/13');
+        new Rolldate({
+            el: '#date-group4-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            value: '2017-10-21' //或2017-10-21 23:52:50
+        })
+
+        // el传dom对象，只支持单个
+        new Rolldate({
+            el: document.getElementById('date-group5-1'),
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100
+        })
+
+        // 分钟按指定数分隔
+        new Rolldate({
+            el: '#date-group6-1',
+            format: 'hh:mm',
+            minStep: 5
+        })
+        // 使用原生click
+        new Rolldate({
+            el: '#date-group7-1',
+            trigger: 'click'
+        })
+
+        // 其他示例
+        //日期判断
+        new Rolldate({
+            el: '#date-group8-1',
+            format: 'YYYY-MM-DD',
+            beginYear: 2000,
+            endYear: 2100,
+            confirm: function (date) {
+                var d = new Date(),
+                    d1 = new Date(date.replace(/\-/g, "\/")),
+                    d2 = new Date(d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate()); //如果非'YYYY-MM-DD'格式，需要另做调整
+
+                if (d1 < d2) {
+                    alert('不能小于当前的日期');
+                    return false;
+                }
+            }
+        })
+
+    }
+</script>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>列表</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="../font/iconfont.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/amazeui.min.css">
+    <link rel="stylesheet" href="../css/swiper-3.3.1.min.css">
+    <link rel="stylesheet" href="../css/wx.css">
+    <script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/rem.js"></script>
+    <script type="text/javascript" src="../js/flybacklog.js"></script>
+    <style>
+        .container {
+            width: 100%;
+            background: #efefef;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .item {
+            position: relative;
+            height: 1.2rem;
+            width: 100%;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .item .content {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1.2rem;
+            line-height: 50px;
+            z-index: 1;
+            box-sizing: border-box;
+            background: #fff;
+            border-bottom: 1px solid rgba(153, 153, 153, 0.192);
+            transition: all .5s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .item .button-group {
+            position: absolute;
+            right: 0;
+            z-index: 0;
+            border: 1px solid #fff;
+        }
+
+        .item .button-group .del-btn {
+            height: 1.2rem;
+            width: 60px;
+            border: 0;
+            color: #fff;
+            background: #da3d3d;
+        }
+
+        .item.active .content {
+            left: -60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main navpage">
+        <div class="h-110 nav-input">
+            <input type="text" placeholder="搜索">
+        </div>
+        <div class="container">
+            <!-- 0 默认状态, 1 左滑状态 -->
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'  onClick="toDetail(this,'PV');">
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'>
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'>
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'>
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'>
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+            <div class="item" data-status='0'>
+                <div class="content">
+                    <div class="h-110 nav-hang">
+                        <img src="../img/pople_icon13.png" alt="">
+                        <span>购买用品</span>
+                        <span>保存未发起</span>
+                        <div class="cl-a9b">
+                            <span>2020-06-16</span>
+                            <span>17:16:31</span>
+                        </div>
+                        <a href="./apply.html"><span class="iconfont icon-z043"></span></a>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="del-btn">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+
+</html>
+<script>
+    const items = document.querySelectorAll('.item')
+    items.forEach(item => {
+        let touchStart, touchEnd
+        // 滑动开始, 记录开始位置
+        item.addEventListener('touchstart', function (e) {
+            touchStart = e.touches[0].clientX
+        })
+        // 滑动结束
+        item.addEventListener('touchend', function (e) {
+            let currentEle = e.currentTarget
+            touchEnd = e.changedTouches[0].clientX
+            // 向左滑, 显示删除按钮
+            if (currentEle.dataset.status === '0' && touchEnd - touchStart < -30) {
+                currentEle.dataset.status = 1
+                currentEle.classList.add('active')
+                $('body').click(function (e) {
+                    console.log(e)
+                    e.stopPropagation()
+                    if (e.target.className == "del-btn") {
+
+                    } else {
+                        currentEle.dataset.status = 0
+                        currentEle.classList.remove('active')
+                    }
+                })
+            }
+            // 向右滑, 隐藏删除按钮
+            if (currentEle.dataset.status === '1' && touchEnd - touchStart > 30) {
+                currentEle.dataset.status = 0
+                currentEle.classList.remove('active')
+            }
+        })
+    })
+
+    const btns = document.querySelectorAll('.del-btn')
+    btns.forEach(btn => {
+        // 删除按钮点击事件
+        btn.addEventListener('click', function (e) {
+            btn.parentElement.parentElement.remove()
+        })
+    })
+</script>
